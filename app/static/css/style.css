@@ -1,0 +1,93 @@
+/* === Theme v1.0 === */
+:root{
+    --primary:#0d6efd; --secondary:#6c757d;
+    --success:#198754; --warning:#ffc107; --danger:#dc3545;
+    --bg:#ffffff; --card:#f8f9fa; --text:#212529; --muted:#6c757d;
+  }
+
+  body{ background-color:var(--bg); color:var(--text); }
+
+  /* Topbar */
+  .navbar .avatar-circle{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:28px; height:28px; border-radius:50%;
+    background:var(--primary); color:#fff; font-size:.8rem; font-weight:600;
+  }
+
+  /* Layout */
+  .sidebar{
+    width:280px; min-height:calc(100vh - 56px); /* subtract topbar */
+    position:sticky; top:56px; /* stick under topbar */
+    transition:transform .2s ease-in-out;
+  }
+  .sidebar .nav-link{
+    color:var(--text);
+    border-radius:.5rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+  }
+  .sidebar .nav-link:hover{
+    background:rgba(13,110,253,.08);
+    color:var(--primary);
+  }
+  .sidebar .nav-section{ letter-spacing:.08em; font-size: 0.7rem; }
+
+  @media (max-width: 991.98px){
+    .sidebar{
+      position:fixed; z-index:1040; top:56px; left:0; transform:translateX(-100%);
+      max-height:calc(100vh - 56px); overflow:auto; box-shadow:0 0.25rem 0.75rem rgba(0,0,0,.08);
+    }
+    .sidebar.sidebar-open{ transform:translateX(0); }
+    #content{ width:100%; }
+  }
+
+  /* Cards */
+  .card{ background:var(--card); border-radius:1rem; }
+
+  /* --- Additional sidebar styles --- */
+.sidebar .nav-btn {
+  width: 100%;
+  border: 0;
+  background: transparent;
+  text-align: left;
+  color: var(--text);
+  border-radius: .5rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  padding: 0.5rem 0.75rem;
+}
+.sidebar .nav-btn:hover {
+  background: rgba(13,110,253,.08);
+  color: var(--primary);
+}
+
+/* Active pill */
+.sidebar .nav-link.active,
+.sidebar .nav-link[aria-expanded="true"],
+.sidebar .nav-btn[aria-expanded="true"] {
+  background: rgba(13,110,253,.12);
+  color: var(--primary);
+}
+
+/* Chevron rotates when open */
+.sidebar .nav-link[aria-expanded="true"] .bi-chevron-down,
+.sidebar .nav-btn[aria-expanded="true"] .bi-chevron-down {
+  transform: rotate(180deg);
+  transition: transform .15s;
+}
+
+/* --- Mini sidebar (icon-only) --- */
+.sidebar-mini {
+  width: 72px !important;
+}
+.sidebar-mini .nav-section,
+.sidebar-mini .nav-label {
+  display: none !important;
+}
+.sidebar-mini .nav .nav-link,
+.sidebar-mini .nav .nav-btn {
+  justify-content: center;
+}
+.sidebar-mini .collapse {
+  display: none !important;
+}

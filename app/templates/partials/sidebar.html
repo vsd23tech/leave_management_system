@@ -1,0 +1,195 @@
+<!-- Sidebar Navigation (accordion, collapsed by default) -->
+<div class="px-2 py-3" id="lms-accordion">
+
+  <!-- Sidebar header with mini-toggle -->
+  <div class="d-flex align-items-center justify-content-between px-2 mb-2">
+    <span class="text-uppercase small text-muted nav-section">Menu</span>
+    <button class="btn btn-sm btn-outline-secondary" type="button" title="Compact sidebar"
+            data-lms-toggle="mini">
+      <i class="bi bi-layout-sidebar-inset"></i>
+    </button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div class="mb-2 px-2 text-uppercase small text-muted nav-section">Dashboard</div>
+  <ul class="nav flex-column gap-1 mb-3">
+    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="#"><i class="bi bi-speedometer2"></i><span class="nav-label">Governance Dashboard</span></a></li>
+    <li class="nav-item"><a class="nav-link d-flex align-items-center gap-2" href="#"><i class="bi bi-grid-3x3-gap"></i><span class="nav-label">System Overview</span></a></li>
+  </ul>
+
+  <!-- SYSTEM ADMINISTRATION -->
+  <div class="mb-2 px-2 text-uppercase small text-muted nav-section">System Administration</div>
+  <ul class="nav flex-column gap-1">
+
+    <!-- Organization Management -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-org" aria-expanded="false" aria-controls="grp-org">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-diagram-3"></i><span class="nav-label">Organization Management</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-org" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Parent Organization</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Subsidiaries</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Sites / Locations</span></a></li>
+          <li><a class="nav-link" href="{{ url_for('admin.list_departments') }}"><span class="nav-label">Departments</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Projects</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Users & Access -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-access" aria-expanded="false" aria-controls="grp-access">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-person-gear"></i><span class="nav-label">Users & Access</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-access" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Manage Users</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Manage Roles &amp; Permissions</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Manage Notice Periods</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Leave & Policy Management -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-leave" aria-expanded="false" aria-controls="grp-leave">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-journal-text"></i><span class="nav-label">Leave &amp; Policy Management</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-leave" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Leave Types</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Leave Policies &amp; Rules</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Comp-Off Rules</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Approval Workflow Config</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Calendar & Events -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-cal" aria-expanded="false" aria-controls="grp-cal">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-calendar-event"></i><span class="nav-label">Calendar &amp; Events</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-cal" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Holiday Calendar</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Global Calendar View</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Reports & Analytics -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-reports" aria-expanded="false" aria-controls="grp-reports">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-graph-up"></i><span class="nav-label">Reports &amp; Analytics</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-reports" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Leave Utilization Reports</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Leave Entitlement Summary</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">User Activity Logs</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Audit Trail</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Configuration & Maintenance -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-config" aria-expanded="false" aria-controls="grp-config">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-sliders"></i><span class="nav-label">Configuration &amp; Maintenance</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-config" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">System Configuration</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Branding &amp; Logo</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Theme Settings</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Enable/Disable Modules</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Retention &amp; Archival Policy</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Backup &amp; Recovery</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">CI/CD Status</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Logs Viewer</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Maintenance Scheduler</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Version Info</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <!-- Chat Assistant Setup -->
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-chat" aria-expanded="false" aria-controls="grp-chat">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-chat-dots"></i><span class="nav-label">Chat Assistant Setup</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-chat" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Predefined Queries</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">FAQ / Glossary Upload</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Role-Based Visibility</span></a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+
+  <!-- MY WORKSPACE -->
+  <div class="mt-3 mb-2 px-2 text-uppercase small text-muted nav-section">My Workspace</div>
+  <ul class="nav flex-column gap-1">
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-my" aria-expanded="false" aria-controls="grp-my">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-person"></i><span class="nav-label">My Dashboard</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-my" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Leave Summary &amp; Balance</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Upcoming Holidays</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Pending Approvals</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-my-leave" aria-expanded="false" aria-controls="grp-my-leave">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-briefcase"></i><span class="nav-label">My Leave</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-my-leave" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Apply for Leave</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Cancel Leave</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">My Leave History</span></a></li>
+        </ul>
+      </div>
+    </li>
+
+    <li class="nav-item">
+      <button class="nav-btn d-flex align-items-center justify-content-between gap-2"
+              data-bs-toggle="collapse" data-bs-target="#grp-help" aria-expanded="false" aria-controls="grp-help">
+        <span class="d-flex align-items-center gap-2"><i class="bi bi-question-circle"></i><span class="nav-label">Help &amp; Support</span></span>
+        <i class="bi bi-chevron-down small"></i>
+      </button>
+      <div class="collapse" id="grp-help" data-bs-parent="#lms-accordion">
+        <ul class="nav flex-column ms-3 mt-1 gap-1">
+          <li><a class="nav-link" href="#"><span class="nav-label">Contact Admin</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Help Documents</span></a></li>
+          <li><a class="nav-link" href="#"><span class="nav-label">Feedback Form</span></a></li>
+        </ul>
+      </div>
+    </li>
+  </ul>
+</div>

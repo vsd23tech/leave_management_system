@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{% block title %}Leave Management System{% endblock %}</title>
+
+  <!-- Bootstrap 5 CSS -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+    crossorigin="anonymous"
+  />
+  <!-- Bootstrap Icons -->
+  <link
+    href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css"
+    rel="stylesheet"
+  />
+  <!-- App theme -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}" />
+
+  {% block head_extra %}{% endblock %}
+</head>
+<body class="bg-body">
+  <!-- Topbar -->
+  {% include "partials/topbar.html" %}
+
+  <div class="d-flex">
+    <!-- Sidebar (collapsible on mobile) -->
+    <nav id="sidebar" class="sidebar bg-light border-end">
+      <div class="sidebar-inner">
+        {% include "partials/sidebar.html" %}
+      </div>
+    </nav>
+
+    <!-- Main content -->
+    <main id="content" class="flex-grow-1 p-3 p-md-4">
+      <!-- Flash messages -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          <div class="container-xxl mb-3">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          </div>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}
+      <div class="container-xxl">
+        <div class="card shadow-sm border-0">
+          <div class="card-body">
+            <h1 class="h4 mb-2">Welcome</h1>
+            <p class="text-muted mb-0">
+              This is the base layout. Sidebar and topbar come from partials; pages will extend this file.
+            </p>
+          </div>
+        </div>
+      </div>
+      {% endblock %}
+    </main>
+  </div>
+
+  <!-- Footer (optional) -->
+  {% block footer %}{% endblock %}
+
+  <!-- Bootstrap JS bundle -->
+  <script
+    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"
+  ></script>
+
+  <!-- Sidebar toggle behavior for small screens -->
+  <script>
+    (function () {
+      const sidebar = document.getElementById('sidebar');
+
+      // Mobile slide-in toggle
+      document.querySelectorAll('[data-lms-toggle="sidebar"]').forEach(btn =>
+        btn.addEventListener('click', () => sidebar.classList.toggle('sidebar-open'))
+      );
+
+      // Mini sidebar toggle & persistence
+      const miniKey = 'lms-mini:v1';
+      function applyMini() { if (localStorage.getItem(miniKey) === '1') sidebar.classList.add('sidebar-mini'); }
+      function toggleMini() {
+        sidebar.classList.toggle('sidebar-mini');
+        localStorage.setItem(miniKey, sidebar.classList.contains('sidebar-mini') ? '1' : '0');
+        refreshTooltips();
+      }
+      document.querySelectorAll('[data-lms-toggle="mini"]').forEach(b => b.addEventListener('click', toggleMini));
+      applyMini();
+
+      // Accordion: collapsed by default, remember last open (new key)
+      const accKey = 'lms-acc-open:v2';
+      const acc = document.getElementById('lms-accordion');
+      if (acc) {
+                 const saved = localStorage.getItem(accKey);
+         if (saved) {
+           const el = document.querySelector(saved);
+           if (el) el.classList.add('show');
+         }
+        acc.querySelectorAll('.collapse').forEach(el => {
+          el.addEventListener('shown.bs.collapse', () => localStorage.setItem(accKey, '#'+el.id));
+          el.addEventListener('hidden.bs.collapse', () => {
+            if (localStorage.getItem(accKey) === '#'+el.id) localStorage.removeItem(accKey);
+          });
+        });
+      }
+
+      // Tooltips in mini mode
+      let tips = [];
+      function initTooltips() {
+        document.querySelectorAll('#sidebar .nav-link, #sidebar .nav-btn').forEach(a => {
+          const lbl = a.querySelector('.nav-label');
+          if (lbl) {
+            a.setAttribute('data-bs-toggle', 'tooltip');
+            a.setAttribute('data-bs-placement', 'right');
+            a.setAttribute('data-bs-title', lbl.textContent.trim());
+          }
+        });
+        tips = [].map.call(document.querySelectorAll('#sidebar [data-bs-toggle="tooltip"]'),
+          el => new bootstrap.Tooltip(el));
+      }
+      function disposeTooltips() { tips.forEach(t => t.dispose()); tips = []; }
+      function refreshTooltips() { disposeTooltips(); if (sidebar.classList.contains('sidebar-mini')) initTooltips(); }
+      refreshTooltips();
+
+      // Close sidebar when clicking outside on small screens
+      document.addEventListener('click', (e) => {
+        if (window.innerWidth < 992) {
+          const inside = sidebar.contains(e.target) || e.target.closest('[data-lms-toggle="sidebar"]');
+          if (!inside) sidebar.classList.remove('sidebar-open');
+        }
+      });
+    })();
+  </script>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

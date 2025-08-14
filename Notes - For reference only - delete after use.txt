@@ -68,3 +68,29 @@ Install dependencies
 Set-up git repo
 set-up ci-cd workflow
 set-up docker workflow
+
+==============
+
+Common types
+
+feat: new feature
+
+fix: bug fix
+
+docs: docs only
+
+chore: repo plumbing (config, deps, housekeeping)
+
+refactor: code change w/o behavior change
+
+perf: performance
+
+test: tests
+
+ci: CI changes
+
+build: build/deps
+
+style: formatting (no code meaning changes)
+
+revert: revert a commit
