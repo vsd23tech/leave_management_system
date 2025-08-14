@@ -1,0 +1,484 @@
+openapi: 3.0.3
+info:
+  title: Leave Management API
+  version: 0.1.0
+servers:
+  - url: http://localhost:8000
+    description: Local development
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+            message:
+              type: string
+            details:
+              type: array
+              items:
+                type: object
+          required: [code, message]
+      required: [error]
+    Pagination:
+      type: object
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/Organization'
+        page:
+          type: integer
+          minimum: 1
+        page_size:
+          type: integer
+        total_items:
+          type: integer
+        total_pages:
+          type: integer
+      required: [items, page, page_size, total_items, total_pages]
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        code:
+          type: string
+          description: Uppercase unique code, 2-20 chars (A-Z0-9_). Immutable once Active.
+          example: ACME_CORP
+        name:
+          type: string
+          example: Acme Corporation
+        login_domains:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+            example: acme.com
+        vanity_domain:
+          type: string
+          nullable: true
+          example: acme.yourapp.com
+        default_timezone:
+          type: string
+          example: Asia/Kolkata
+        default_country:
+          type: string
+          example: IN
+        default_currency:
+          type: string
+          example: INR
+        working_days:
+          type: array
+          items:
+            type: string
+            enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
+          example: [MON, TUE, WED, THU, FRI]
+        leave_year_start:
+          type: string
+          description: Month-Day (MM-DD), e.g., 04-01
+          example: "04-01"
+        logo_file_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          enum: [Draft, PendingApproval, Active, Inactive, Rejected]
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        created_by:
+          type: string
+          format: uuid
+          readOnly: true
+        updated_by:
+          type: string
+          format: uuid
+          readOnly: true
+      required: [code, name, login_domains, default_timezone, default_country, default_currency, status]
+    OrganizationCreateRequest:
+      type: object
+      properties:
+        code:
+          type: string
+        name:
+          type: string
+        login_domains:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+        vanity_domain:
+          type: string
+          nullable: true
+        default_timezone:
+          type: string
+        default_country:
+          type: string
+        default_currency:
+          type: string
+        working_days:
+          type: array
+          items:
+            type: string
+            enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
+        leave_year_start:
+          type: string
+          example: "04-01"
+        logo_file_id:
+          type: string
+          format: uuid
+        submit_for_approval:
+          type: boolean
+          description: If true, new org goes to PendingApproval; otherwise remains Draft.
+          default: true
+      required: [code, name, login_domains, default_timezone, default_country, default_currency]
+    OrganizationPatchRequest:
+      type: object
+      description: Partial update; server creates a pending change set for approval.
+      properties:
+        name:
+          type: string
+        login_domains:
+          type: array
+          minItems: 1
+          maxItems: 5
+          items:
+            type: string
+        vanity_domain:
+          type: string
+          nullable: true
+        default_timezone:
+          type: string
+        default_country:
+          type: string
+        default_currency:
+          type: string
+        working_days:
+          type: array
+          items:
+            type: string
+            enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
+        leave_year_start:
+          type: string
+          example: "04-01"
+        logo_file_id:
+          type: string
+          format: uuid
+        submit_for_approval:
+          type: boolean
+          default: true
+paths:
+  /api/v1/organizations:
+    get:
+      operationId: org_list
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: List organizations
+      parameters:
+        - in: query
+          name: page
+          schema: { type: integer, minimum: 1, default: 1 }
+        - in: query
+          name: page_size
+          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+        - in: query
+          name: search
+          schema: { type: string }
+          description: Search by name, code, or domain.
+        - in: query
+          name: status
+          schema:
+            type: string
+            enum: [Draft, PendingApproval, Active, Inactive, Rejected]
+        - in: query
+          name: created_from
+          schema: { type: string, format: date }
+        - in: query
+          name: created_to
+          schema: { type: string, format: date }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Pagination'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    post:
+      operationId: org_create
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Create organization (Draft or PendingApproval)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationCreateRequest'
+            examples:
+              createPending:
+                value:
+                  code: ACME
+                  name: Acme Corporation
+                  login_domains: [acme.com]
+                  default_timezone: Asia/Kolkata
+                  default_country: IN
+                  default_currency: INR
+                  submit_for_approval: true
+      responses:
+        '201':
+          description: Created
+          headers:
+            Location:
+              description: URL of the created organization
+              schema: { type: string }
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: Conflict (duplicate code or name)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/v1/organizations/{id}:
+    get:
+      operationId: org_getById
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Get organization by ID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+    patch:
+      operationId: org_patch
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Propose changes to an organization (creates pending change set)
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrganizationPatchRequest'
+      responses:
+        '200':
+          description: OK (changeset created; current Active remains unchanged)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/v1/organizations/{id}:approve:
+    post:
+      operationId: org_approve
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Approve pending organization or change set
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '403':
+          description: Forbidden (maker == checker or role missing)
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/v1/organizations/{id}:reject:
+    post:
+      operationId: org_reject
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Reject pending organization or change set
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+              required: [reason]
+      responses:
+        '200':
+          description: Rejected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/v1/organizations/{id}:activate:
+    post:
+      operationId: org_activate
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Activate an organization
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+  /api/v1/organizations/{id}:deactivate:
+    post:
+      operationId: org_deactivate
+      tags: [organizations]
+      security: [{ bearerAuth: [] }]
+      summary: Deactivate an organization
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema: { type: string, format: uuid }
+      responses:
+        '200':
+          description: Deactivated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Error' }

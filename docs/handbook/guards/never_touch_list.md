@@ -1,0 +1,9 @@
+/docs/handbook/**
+/docs/registries/**
+/docs/catalogs/**
+/openapi/leave_mgmt.yaml
+/.github/workflows/**
+/docker/**
+/deployments/**
+/templates/partials/sidebar.html
+/templates/partials/topbar.html

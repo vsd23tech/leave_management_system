@@ -1,0 +1,43 @@
+
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: lms_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: lms_db
+      POSTGRES_USER: lms_user
+      POSTGRES_PASSWORD: lms_pass
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U lms_user -d lms_db"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  app:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: lms_app
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      # SQLAlchemy URL (to be read by app config)
+      DATABASE_URL: postgresql+psycopg2://lms_user:lms_pass@db:5432/lms_db
+      FLASK_ENV: development
+      FLASK_DEBUG: "1"
+      PYTHONPATH: /app
+    ports:
+      - "8000:8000"
+    volumes:
+      - ..:/app  # live-reload during local dev once we add it
+      - app_venv:/app/.venv
+    command: ["poetry", "run", "gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "app.main:create_app()"]
+
+volumes:
+  pg_data:
+  app_venv:

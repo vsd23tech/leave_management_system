@@ -1,0 +1,70 @@
+First pass — fill these with placeholder but binding rules:
+
+handbook/tech-stack.md → Languages, frameworks, versions, DB choice.
+
+handbook/ui-ux-style-guide.md → Colors, typography, component rules.
+
+handbook/api-conventions.md → Naming, versioning, error envelope, pagination.
+
+handbook/security-baseline.md → OWASP target, auth type, headers, secrets policy.
+
+handbook/guards/cursor_system_prompt.md → Copy in the guardrails we discussed.
+
+💡 These 5 files will immediately reduce Cursor’s tendency to “get creative.”
+
+
+------------------
+
+Seed the Global Contracts
+Before any feature work, give Cursor a fixed target for APIs and global references:
+
+openapi/leave_mgmt.yaml → Add just one endpoint (e.g., POST /leave-requests) to prove schema-first flow.
+
+registries/screens.csv → Add first screen entry (SCR-201 Apply Leave).
+
+registries/workflows.csv → Add first workflow entry (WF-041 Leave Application).
+
+catalogs/ui_patterns.md → List 2–3 reusable patterns (FormTwoColumn, SummaryCard, TableList).
+
+-----------------
+
+Build the First Feature Folder
+Start with features/leave-application/:
+
+Fill README.md with feature overview + links to specs.
+
+Create 1 screen spec in screens/ (using IDs from registries).
+
+Create 1 workflow spec in workflows/ (also from registries).
+
+Add any BR/VAL that are unique to this feature in local br/ and validations/.
+
+----------------
+
+Run the First Cursor Loop
+Use the three-prompt loop we discussed:
+
+Update OpenAPI for the API.
+
+Implement API handler + tests.
+
+Build UI screen calling that API.
+
+---------------
+feature folder
+menus and page layout (add these layout rules to the ui-ux-style-guide.md and update the never_touch_list.md)
+Role-driven menus, Role-driven menus
+
+Work on
+Feature folder
+Add role-driven menu rules + context-switch pattern to ui-ux-style-guide.md
+Add templates/partials/sidebar.html and templates/partials/topbar.html as never-touch items in never_touch_list.md so Cursor always extends them.
+Add the DB-based role model into the authentication-authz.md
+Update ui-ux-style-guide.md navigation section to say menu is generated from DB role mapping via helper function.
+
+Before development:
+Create virtual environment
+Install dependencies
+Set-up git repo
+set-up ci-cd workflow
+set-up docker workflow
