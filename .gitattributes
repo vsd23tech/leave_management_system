@@ -1,0 +1,16 @@
+* text=auto
+
+# Force LF in the repo for code & config that must be consistent on CI/Linux
+*.py      text eol=lf
+*.sh      text eol=lf
+*.ps1     text eol=crlf
+*.bat     text eol=crlf
+*.cmd     text eol=crlf
+*.yml     text eol=lf
+*.yaml    text eol=lf
+*.json    text eol=lf
+*.toml    text eol=lf
+*.ini     text eol=lf
+*.md      text eol=lf
+Dockerfile text eol=lf
+*.dockerfile text eol=lf
