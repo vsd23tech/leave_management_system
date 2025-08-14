@@ -5,6 +5,9 @@ on:
     branches: ["**"]
   pull_request:
 
+permissions:
+  contents: read
+
 jobs:
   build-test-lint:
     runs-on: ubuntu-latest
@@ -13,25 +16,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
-
-      - name: Prepare git for pre-commit
-        run: |
-          git config --global --unset-all http.https://github.com/.extraheader || true
-          git config --global credential.helper ""
-          git config --global url.https://github.com/.insteadof git@github.com:
-          git config --global url.https://github.com/.insteadof ssh://git@github.com/
-          git config --global http.https://github.com.followRedirects true
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-        env:
-          GIT_TERMINAL_PROMPT: 0
-
-      - name: Normalize git auth for pre-commit
-        run: |
-          git config --global --unset-all http.https://github.com/.extraheader || true
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-        env:
-          GIT_TERMINAL_PROMPT: 0
+          fetch-depth: 0
 
       - name: Set up Python 3.12
         uses: actions/setup-python@v5
@@ -53,6 +38,12 @@ jobs:
 
       - name: Install deps
         run: poetry install
+
+      - name: Cache pre-commit
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pre-commit
+          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
 
       - name: Pre-commit (lint & security)
         run: poetry run pre-commit run --all-files
