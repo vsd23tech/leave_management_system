@@ -1,9 +1,10 @@
+---
 name: CI
 
 on:
   push:
     branches: ["**"]
-  pull_request:
+  pull_request: {}
 
 permissions:
   contents: read
@@ -43,15 +44,20 @@ jobs:
       - name: Setup git credentials for pre-commit
         run: |
           git config --global credential.helper store
-          git config --global url."https://github.com/".insteadOf "git@github.com:"
-          git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
-          echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
+          git config --global url."https://github.com/".insteadOf \
+            "git@github.com:"
+          git config --global url."https://github.com/".insteadOf \
+            "ssh://git@github.com/"
+          echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" \
+            > ~/.git-credentials
 
       - name: Cache pre-commit
         uses: actions/cache@v4
         with:
           path: ~/.cache/pre-commit
-          key: pre-commit-${{ runner.os }}-${{ hashFiles('.pre-commit-config.yaml') }}
+          key: >
+            pre-commit-${{ runner.os }}-${{
+            hashFiles('.pre-commit-config.yaml') }}
 
       - name: Pre-commit (lint & security)
         run: poetry run pre-commit run --all-files
@@ -62,10 +68,13 @@ jobs:
         run: poetry run pytest
 
       - name: Export deps for pip-audit
-        run: poetry export -f requirements.txt --without-hashes -o requirements.txt
+        run: >
+          poetry export -f requirements.txt --without-hashes
+          -o requirements.txt
 
       - name: pip-audit
-        run: pip install pip-audit && pip-audit -r requirements.txt --strict
+        run: >
+          pip install pip-audit && pip-audit -r requirements.txt --strict
 
       - name: Build Docker image
         run: docker build -f docker/Dockerfile -t lms-app:ci .

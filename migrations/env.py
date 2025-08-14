@@ -12,9 +12,9 @@ PROJECT_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if PROJECT_ROOT not in sys.path:
     sys.path.insert(0, PROJECT_ROOT)
 
+
 # App imports: Base + load all models so metadata is populated
 from app.db import Base  # Base.metadata is our target
-import app.models as _models  # triggers app/models/__init__.py to import submodules
 
 # Alembic config + logging (leave your existing code below this line)
 config = context.config

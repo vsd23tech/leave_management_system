@@ -18,7 +18,7 @@
 - Deprecations: mark in OpenAPI with `deprecated: true` and provide alternative
 
 ## 3) Requests
-- **Headers (required)**: 
+- **Headers (required)**:
   - `Authorization: Bearer <token>` (unless explicitly public)
   - `Content-Type: application/json` for JSON payloads
   - `Idempotency-Key` for unsafe methods (POST/PUT/PATCH/DELETE) when creating or mutating server state
@@ -28,7 +28,7 @@
 
 ## 4) Responses
 - **Success envelope** (default): return the resource directly (no extra wrapper) with appropriate HTTP code
-- **Error envelope** (always): 
+- **Error envelope** (always):
 ```json
 { "error": { "code": "string", "message": "human-readable", "details": [] } }
 ```

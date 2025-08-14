@@ -1,6 +1,6 @@
 # UI/UX Style Guide – Version 0.1 (Non‑Negotiable)
 
-> Purpose: enforce a consistent, professional UI that is modern but server‑rendered (Bootstrap 5 + Jinja2 + vanilla JS/HTMX).  
+> Purpose: enforce a consistent, professional UI that is modern but server‑rendered (Bootstrap 5 + Jinja2 + vanilla JS/HTMX).
 > Scope: applies to all screens, components, and CSS in this application. Any deviation requires an ADR.
 
 ---
@@ -303,14 +303,14 @@ Ensure all menus and sub-menus are centrally defined and role visibility is cont
 ### Storage
 Menus are stored in the database with a parent-child hierarchy:
 
-**menus**  
+**menus**
 | id (PK) | parent_id (FK) | label | icon | url | order |
 |---------|----------------|-------|------|-----|-------|
 | 1       | NULL           | Dashboard | bi-speedometer2 | /dashboard | 1 |
 | 2       | NULL           | User & Access Management | bi-people | NULL | 2 |
 | 3       | 2              | Manage Users | NULL | /users | 1 |
 
-**menu_roles**  
+**menu_roles**
 | menu_id (FK) | role_id (FK) |
 |--------------|--------------|
 | 1            | 1            |

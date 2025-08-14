@@ -120,7 +120,7 @@
 ---
 
 ## 14) Error Handling
-- User‑facing errors use the **standard envelope** (see api-conventions.md). 
+- User‑facing errors use the **standard envelope** (see api-conventions.md).
 - Do not leak stack traces or query fragments; store details only in server logs.
 - 404/403 behavior does not reveal resource existence beyond authorization result.
 
@@ -182,4 +182,3 @@
 
 ## 22) Exceptions & ADRs
 - Any deviation from this baseline requires an ADR referencing the specific section, risk acceptance, and compensating controls.
-

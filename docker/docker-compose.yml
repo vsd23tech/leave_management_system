@@ -1,4 +1,4 @@
-
+---
 services:
   db:
     image: postgres:16-alpine
@@ -26,17 +26,25 @@ services:
       db:
         condition: service_healthy
     environment:
-      # SQLAlchemy URL (to be read by app config)
-      DATABASE_URL: postgresql+psycopg2://lms_user:lms_pass@db:5432/lms_db
+      DATABASE_URL: >
+        postgresql+psycopg2://lms_user:lms_pass@db:5432/lms_db
       FLASK_ENV: development
       FLASK_DEBUG: "1"
       PYTHONPATH: /app
     ports:
       - "8000:8000"
     volumes:
-      - ..:/app  # live-reload during local dev once we add it
+      - ..:/app
       - app_venv:/app/.venv
-    command: ["poetry", "run", "gunicorn", "-w", "2", "-b", "0.0.0.0:8000", "app.main:create_app()"]
+    command:
+      - "poetry"
+      - "run"
+      - "gunicorn"
+      - "-w"
+      - "2"
+      - "-b"
+      - "0.0.0.0:8000"
+      - "app.main:create_app()"
 
 volumes:
   pg_data:

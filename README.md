@@ -1,6 +1,6 @@
 # Leave Management System — Dev Setup
 
-This repository uses **Python 3.12**, **Flask**, **SQLAlchemy**, **Alembic**, and **Poetry** for dependency management.  
+This repository uses **Python 3.12**, **Flask**, **SQLAlchemy**, **Alembic**, and **Poetry** for dependency management.
 CI: **GitHub Actions**. Containers: **Docker + docker-compose**.
 
 ## Prerequisites

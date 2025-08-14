@@ -1,15 +1,12 @@
 """baseline
 
 Revision ID: 9d37b3959ece
-Revises: 
+Revises:
 Create Date: 2025-08-14 11:51:27.226381
 """
 
-from alembic import op
-import sqlalchemy as sa
-
 # revision identifiers, used by Alembic.
-revision = '9d37b3959ece'
+revision = "9d37b3959ece"
 down_revision = None
 branch_labels = None
 depends_on = None

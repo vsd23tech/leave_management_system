@@ -1,6 +1,8 @@
 from flask import Flask, jsonify
-from app.config import get_settings
+
 from app import db as dbmod
+from app.config import get_settings
+
 
 def create_app():
     settings = get_settings()

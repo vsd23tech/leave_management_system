@@ -163,7 +163,7 @@ Store and manage user-role mappings in the database so roles can be updated dyna
 ### Behavior
 - At login, fetch all roles for the user:
   ```sql
-  SELECT r.name 
+  SELECT r.name
   FROM roles r
   JOIN user_roles ur ON ur.role_id = r.id
   WHERE ur.user_id = :current_user_id;
@@ -225,7 +225,7 @@ Store and manage user-role mappings in the database so roles can be updated dyna
 ### Behavior
 - At login, fetch all roles for the user:
   ```sql
-  SELECT r.name 
+  SELECT r.name
   FROM roles r
   JOIN user_roles ur ON ur.role_id = r.id
   WHERE ur.user_id = :current_user_id;
@@ -278,4 +278,3 @@ Link the database-based role model to the navigation menu system for consistent 
 ### Maintenance
 - Menu-role mappings can be updated in the DB without code changes.
 - Consider building an admin UI to manage menus and role associations.
-

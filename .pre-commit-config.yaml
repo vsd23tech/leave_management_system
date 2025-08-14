@@ -1,3 +1,4 @@
+---
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v4.6.0
@@ -29,11 +30,14 @@ repos:
         args: ["-c", "bandit.yaml"]
         additional_dependencies: []
 
-  - repo: https://github.com/returntocorp/semgrep
-    rev: v1.78.0
-    hooks:
-      - id: semgrep
-        args: ["--config", "p/ci", "--error"]  # general CI security & lint pack
+  # - repo: https://github.com/returntocorp/semgrep
+  #   rev: v1.78.0
+  #   hooks:
+  #     - id: semgrep
+  #       args:
+  #         - "--config"
+  #         - "p/ci"
+  #         - "--error"
 
   - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.35.1

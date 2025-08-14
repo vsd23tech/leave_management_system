@@ -1,6 +1,6 @@
 # Tech Stack – Version 0.1 (Non‑Negotiable)
 
-> Purpose: lock the baseline technologies so code generation stays consistent across modules.  
+> Purpose: lock the baseline technologies so code generation stays consistent across modules.
 > Scope: applies to all app services, jobs, and tooling unless an ADR explicitly overrides.
 
 ## 1) Principles
