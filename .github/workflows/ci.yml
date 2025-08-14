@@ -47,6 +47,8 @@ jobs:
 
       - name: Pre-commit (lint & security)
         run: poetry run pre-commit run --all-files
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Run tests
         run: poetry run pytest
