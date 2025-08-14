@@ -43,6 +43,8 @@ jobs:
       - name: Setup git credentials for pre-commit
         run: |
           git config --global credential.helper store
+          git config --global url."https://github.com/".insteadOf "git@github.com:"
+          git config --global url."https://github.com/".insteadOf "ssh://git@github.com/"
           echo "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com" > ~/.git-credentials
 
       - name: Cache pre-commit
