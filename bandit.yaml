@@ -1,0 +1,13 @@
+exclude_dirs:
+  - tests
+  - migrations
+  - venv
+  - .venv
+
+skips:
+  - B101  # assert_used - allow asserts in tests
+  - B601  # paramiko_calls - if using paramiko
+  - B603  # subprocess_without_shell_equals_true - common in CI scripts
+
+confidence: medium
+severity: medium

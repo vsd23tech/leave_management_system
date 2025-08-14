@@ -1,3 +1,4 @@
+---
 openapi: 3.0.3
 info:
   title: Leave Management API
@@ -54,7 +55,8 @@ components:
           readOnly: true
         code:
           type: string
-          description: Uppercase unique code, 2-20 chars (A-Z0-9_). Immutable once Active.
+          description: >
+            Uppercase unique code, 2-20 chars (A-Z0-9_). Immutable once Active.
           example: ACME_CORP
         name:
           type: string
@@ -83,7 +85,14 @@ components:
           type: array
           items:
             type: string
-            enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
+            enum:
+              - MON
+              - TUE
+              - WED
+              - THU
+              - FRI
+              - SAT
+              - SUN
           example: [MON, TUE, WED, THU, FRI]
         leave_year_start:
           type: string
@@ -112,7 +121,14 @@ components:
           type: string
           format: uuid
           readOnly: true
-      required: [code, name, login_domains, default_timezone, default_country, default_currency, status]
+      required:
+        - code
+        - name
+        - login_domains
+        - default_timezone
+        - default_country
+        - default_currency
+        - status
     OrganizationCreateRequest:
       type: object
       properties:
@@ -139,7 +155,14 @@ components:
           type: array
           items:
             type: string
-            enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
+            enum:
+              - MON
+              - TUE
+              - WED
+              - THU
+              - FRI
+              - SAT
+              - SUN
         leave_year_start:
           type: string
           example: "04-01"
@@ -148,12 +171,20 @@ components:
           format: uuid
         submit_for_approval:
           type: boolean
-          description: If true, new org goes to PendingApproval; otherwise remains Draft.
+          description: >
+            If true, new org goes to PendingApproval; otherwise remains Draft.
           default: true
-      required: [code, name, login_domains, default_timezone, default_country, default_currency]
+      required:
+        - code
+        - name
+        - login_domains
+        - default_timezone
+        - default_country
+        - default_currency
     OrganizationPatchRequest:
       type: object
-      description: Partial update; server creates a pending change set for approval.
+      description: >
+        Partial update; server creates a pending change set for approval.
       properties:
         name:
           type: string
@@ -176,7 +207,14 @@ components:
           type: array
           items:
             type: string
-            enum: [MON, TUE, WED, THU, FRI, SAT, SUN]
+            enum:
+              - MON
+              - TUE
+              - WED
+              - THU
+              - FRI
+              - SAT
+              - SUN
         leave_year_start:
           type: string
           example: "04-01"
@@ -191,18 +229,18 @@ paths:
     get:
       operationId: org_list
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: List organizations
       parameters:
         - in: query
           name: page
-          schema: { type: integer, minimum: 1, default: 1 }
+          schema: {type: integer, minimum: 1, default: 1}
         - in: query
           name: page_size
-          schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+          schema: {type: integer, minimum: 1, maximum: 100, default: 20}
         - in: query
           name: search
-          schema: { type: string }
+          schema: {type: string}
           description: Search by name, code, or domain.
         - in: query
           name: status
@@ -211,10 +249,10 @@ paths:
             enum: [Draft, PendingApproval, Active, Inactive, Rejected]
         - in: query
           name: created_from
-          schema: { type: string, format: date }
+          schema: {type: string, format: date}
         - in: query
           name: created_to
-          schema: { type: string, format: date }
+          schema: {type: string, format: date}
       responses:
         '200':
           description: OK
@@ -226,11 +264,11 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
     post:
       operationId: org_create
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Create organization (Draft or PendingApproval)
       requestBody:
         required: true
@@ -254,7 +292,7 @@ paths:
           headers:
             Location:
               description: URL of the created organization
-              schema: { type: string }
+              schema: {type: string}
           content:
             application/json:
               schema:
@@ -263,28 +301,28 @@ paths:
           description: Bad Request
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '401':
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '409':
           description: Conflict (duplicate code or name)
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
   /api/v1/organizations/{id}:
     get:
       operationId: org_getById
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Get organization by ID
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string, format: uuid }
+          schema: {type: string, format: uuid}
       responses:
         '200':
           description: OK
@@ -296,22 +334,22 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '404':
           description: Not Found
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
     patch:
       operationId: org_patch
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Propose changes to an organization (creates pending change set)
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string, format: uuid }
+          schema: {type: string, format: uuid}
       requestBody:
         required: true
         content:
@@ -329,28 +367,28 @@ paths:
           description: Bad Request
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '401':
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '409':
           description: Conflict
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
   /api/v1/organizations/{id}:approve:
     post:
       operationId: org_approve
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Approve pending organization or change set
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string, format: uuid }
+          schema: {type: string, format: uuid}
       responses:
         '200':
           description: Approved
@@ -362,28 +400,28 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '403':
           description: Forbidden (maker == checker or role missing)
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '404':
           description: Not Found
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
   /api/v1/organizations/{id}:reject:
     post:
       operationId: org_reject
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Reject pending organization or change set
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string, format: uuid }
+          schema: {type: string, format: uuid}
       requestBody:
         required: true
         content:
@@ -405,28 +443,28 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '403':
           description: Forbidden
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '404':
           description: Not Found
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
   /api/v1/organizations/{id}:activate:
     post:
       operationId: org_activate
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Activate an organization
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string, format: uuid }
+          schema: {type: string, format: uuid}
       responses:
         '200':
           description: Activated
@@ -438,28 +476,28 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '403':
           description: Forbidden
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '404':
           description: Not Found
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
   /api/v1/organizations/{id}:deactivate:
     post:
       operationId: org_deactivate
       tags: [organizations]
-      security: [{ bearerAuth: [] }]
+      security: [{bearerAuth: []}]
       summary: Deactivate an organization
       parameters:
         - in: path
           name: id
           required: true
-          schema: { type: string, format: uuid }
+          schema: {type: string, format: uuid}
       responses:
         '200':
           description: Deactivated
@@ -471,14 +509,14 @@ paths:
           description: Unauthorized
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '403':
           description: Forbidden
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
         '404':
           description: Not Found
           content:
             application/json:
-              schema: { $ref: '#/components/schemas/Error' }
+              schema: {$ref: '#/components/schemas/Error'}
