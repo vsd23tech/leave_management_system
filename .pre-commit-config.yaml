@@ -35,7 +35,7 @@ repos:
       - id: semgrep
         args: ["--config", "p/ci", "--error"]  # general CI security & lint pack
 
-  - repo: https://github.com/pre-commit/mirrors-yamllint
+  - repo: https://github.com/adrienverge/yamllint.git
     rev: v1.35.1
     hooks:
       - id: yamllint
