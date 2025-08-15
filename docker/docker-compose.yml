@@ -3,19 +3,25 @@ services:
   db:
     image: postgres:16-alpine
     container_name: lms_db
+    env_file:
+      - ../.env
     ports:
       - "5432:5432"
-    environment:
-      POSTGRES_DB: lms_db
-      POSTGRES_USER: lms_user
-      POSTGRES_PASSWORD: lms_pass
+    # Postgres reads its own env (DB_* ) at runtime; no YAML-time substitution
     volumes:
       - pg_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U lms_user -d lms_db"]
+      # Use container env at runtime; $$ escapes so compose doesn't
+      # substitute at parse time
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U \"$${DB_USER:-lms_user}\" -d \"$${DB_NAME:-lms_db}\"",
+        ]
       interval: 5s
       timeout: 3s
       retries: 10
+    restart: unless-stopped
 
   app:
     build:
@@ -25,26 +31,31 @@ services:
     depends_on:
       db:
         condition: service_healthy
+    env_file:
+      - ../.env
     environment:
-      DATABASE_URL: >
-        postgresql+psycopg2://lms_user:lms_pass@db:5432/lms_db
-      FLASK_ENV: development
-      FLASK_DEBUG: "1"
+      DATABASE_URL: ${DATABASE_URL_DOCKER}
       PYTHONPATH: /app
+      # Gunicorn knobs are provided via this single var so you can tune
+      # from .env
+      GUNICORN_CMD_ARGS: >-
+        --workers ${GUNICORN_WORKERS:-2}
+        --timeout ${GUNICORN_TIMEOUT:-60}
+        --access-logfile -
+        --error-logfile -
     ports:
       - "8000:8000"
     volumes:
       - ..:/app
       - app_venv:/app/.venv
     command:
-      - "poetry"
-      - "run"
-      - "gunicorn"
-      - "-w"
-      - "2"
-      - "-b"
-      - "0.0.0.0:8000"
-      - "app.main:create_app()"
+      - poetry
+      - run
+      - gunicorn
+      - -b
+      - 0.0.0.0:8000
+      - app.main:create_app()
+    restart: unless-stopped
 
 volumes:
   pg_data:
