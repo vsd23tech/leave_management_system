@@ -32,3 +32,6 @@ dist/
 
 # Docker artifacts
 **/.dockerignore
+
+# Notes file
+Notes - For reference only - delete after use
