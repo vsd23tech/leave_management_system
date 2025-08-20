@@ -1,93 +1,713 @@
-/* === Theme v1.0 === */
-:root{
-    --primary:#0d6efd; --secondary:#6c757d;
-    --success:#198754; --warning:#ffc107; --danger:#dc3545;
-    --bg:#ffffff; --card:#f8f9fa; --text:#212529; --muted:#6c757d;
+/* ==========================================================================
+   Leave Management System – Global UI/UX Styles
+   Scope: tokens, typography, spacing, cards, buttons/inputs, chips,
+          skeletons, empty states, responsive rules, dark-mode, a11y,
+          Chart.js theming via CSS variables.
+   Dependencies: Bootstrap 5.x (loaded before this file)
+   ========================================================================== */
+
+/* --- Color Tokens -------------------------------------------------------- */
+:root {
+  /* Brand */
+  --brand-primary: #0d6efd;
+  --brand-secondary: #6c757d;
+
+  /* Semantic */
+  --brand-success: #198754;
+  --brand-warning: #ffc107;
+  --brand-danger: #dc3545;
+  --brand-info: #0dcaf0;
+
+  /* Surface / Text */
+  --bg-body: #ffffff;
+  --bg-muted: #f8f9fa;
+  --bg-elev-1: #ffffff;
+  --bg-elev-2: #f6f7f9;
+
+  --text-body: #212529;
+  --text-muted: #6c757d;
+  --text-inverse: #ffffff;
+
+  /* Borders & Lines */
+  --line-color: #e5e7eb;
+  /* neutral 200 */
+  --line-strong: #d1d5db;
+  /* neutral 300 */
+
+  /* Effects */
+  --shadow-sm: 0 1px 2px rgba(16, 24, 40, 0.06);
+  --shadow-md: 0 2px 6px rgba(16, 24, 40, 0.08), 0 1px 3px rgba(16, 24, 40, 0.04);
+  --shadow-lg: 0 8px 24px rgba(16, 24, 40, 0.12);
+
+  /* Radii */
+  --radius-sm: .375rem;
+  --radius-md: .5rem;
+  --radius-lg: .75rem;
+  --radius-xl: 1rem;
+
+  /* Focus ring */
+  --focus-ring: 0 0 0 .25rem rgba(13, 110, 253, .25);
+
+  /* Gradients (subtle) */
+  --grad-surface: linear-gradient(180deg, rgba(13, 110, 253, 0.04), rgba(13, 110, 253, 0));
+
+  /* Chart variables (read by JS) */
+  --chart-grid: #e5e7eb;
+  --chart-axis: #6b7280;
+  --chart-tooltip-bg: #111827;
+  --chart-tooltip-fg: #f9fafb;
+  --chart-legend-fg: #374151;
+
+  /* Spacing rhythm */
+  --space-1: .25rem;
+  --space-2: .5rem;
+  --space-3: .75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+}
+
+/* Auto-respect OS preference unless a [data-theme] is set */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]):not([data-theme="dark"]) {
+    --bg-body: #0b0f14;
+    --bg-muted: #0f1520;
+    --bg-elev-1: #0f1520;
+    --bg-elev-2: #111827;
+
+    --text-body: #e5e7eb;
+    --text-muted: #9ca3af;
+    --text-inverse: #0b0f14;
+
+    --line-color: #243041;
+    --line-strong: #334155;
+
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.45);
+    --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.55);
+
+    --chart-grid: #2a3648;
+    --chart-axis: #9ca3af;
+    --chart-tooltip-bg: #111827;
+    --chart-tooltip-fg: #f9fafb;
+    --chart-legend-fg: #d1d5db;
+  }
+}
+
+/* Explicit dark mode override */
+:root[data-theme="dark"] {
+  --bg-body: #0b0f14;
+  --bg-muted: #0f1520;
+  --bg-elev-1: #0f1520;
+  --bg-elev-2: #111827;
+
+  --text-body: #e5e7eb;
+  --text-muted: #9ca3af;
+  --text-inverse: #0b0f14;
+
+  --line-color: #243041;
+  --line-strong: #334155;
+
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.35);
+  --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.45);
+  --shadow-lg: 0 12px 30px rgba(0, 0, 0, 0.55);
+
+  --chart-grid: #2a3648;
+  --chart-axis: #9ca3af;
+  --chart-tooltip-bg: #111827;
+  --chart-tooltip-fg: #f9fafb;
+  --chart-legend-fg: #d1d5db;
+}
+
+/* --- Base / Body --------------------------------------------------------- */
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--bg-body);
+  color: var(--text-body);
+  font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+  line-height: 1.6;
+}
+
+/* Skip link for accessibility */
+.skip-link {
+  position: absolute;
+  left: -999px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.skip-link:focus {
+  left: 1rem;
+  top: 1rem;
+  width: auto;
+  height: auto;
+  padding: .5rem .75rem;
+  background: var(--brand-primary);
+  color: var(--text-inverse);
+  border-radius: var(--radius-sm);
+  box-shadow: var(--focus-ring);
+}
+
+/* --- Typography ---------------------------------------------------------- */
+h1,
+.h1 {
+  font-weight: 700;
+  line-height: 1.25;
+  margin-bottom: var(--space-4);
+}
+
+h2,
+.h2 {
+  font-weight: 700;
+  line-height: 1.28;
+  margin-bottom: var(--space-4);
+}
+
+h3,
+.h3 {
+  font-weight: 600;
+  line-height: 1.32;
+  margin-bottom: var(--space-3);
+}
+
+h4,
+.h4 {
+  font-weight: 600;
+  line-height: 1.36;
+  margin-bottom: var(--space-3);
+}
+
+h5,
+.h5 {
+  font-weight: 600;
+  line-height: 1.4;
+  margin-bottom: var(--space-2);
+}
+
+h6,
+.h6 {
+  font-weight: 600;
+  line-height: 1.45;
+  margin-bottom: var(--space-2);
+}
+
+.lead {
+  color: var(--text-muted);
+}
+
+/* Responsive type scale tweaks */
+@media (max-width: 767.98px) {
+
+  h1,
+  .h1 {
+    font-size: clamp(1.5rem, 5vw, 2rem);
   }
 
-  body{ background-color:var(--bg); color:var(--text); }
-
-  /* Topbar */
-  .navbar .avatar-circle{
-    display:inline-flex; align-items:center; justify-content:center;
-    width:28px; height:28px; border-radius:50%;
-    background:var(--primary); color:#fff; font-size:.8rem; font-weight:600;
+  h2,
+  .h2 {
+    font-size: clamp(1.25rem, 4.5vw, 1.75rem);
   }
 
-  /* Layout */
-  .sidebar{
-    width:280px; min-height:calc(100vh - 56px); /* subtract topbar */
-    position:sticky; top:56px; /* stick under topbar */
-    transition:transform .2s ease-in-out;
+  h3,
+  .h3 {
+    font-size: clamp(1.125rem, 4vw, 1.5rem);
   }
-  .sidebar .nav-link{
-    color:var(--text);
-    border-radius:.5rem;
-    font-size: 0.9rem;
-    font-weight: 500;
+}
+
+/* --- Spacing & Rhythm ---------------------------------------------------- */
+.section {
+  padding-top: var(--space-6);
+  padding-bottom: var(--space-6);
+}
+
+.section-sm {
+  padding-block: var(--space-5);
+}
+
+.section-lg {
+  padding-block: calc(var(--space-6) + .75rem);
+}
+
+.g-gap-1 {
+  gap: var(--space-2);
+}
+
+.g-gap-2 {
+  gap: var(--space-3);
+}
+
+.g-gap-3 {
+  gap: var(--space-4);
+}
+
+.g-gap-4 {
+  gap: var(--space-5);
+}
+
+/* --- Cards & Panels ------------------------------------------------------ */
+.card {
+  border: 1px solid var(--line-color);
+  background: var(--bg-elev-1);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-sm);
+}
+
+.card-header {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.00), rgba(0, 0, 0, 0.02));
+  border-bottom: 1px solid var(--line-color);
+  border-top-left-radius: var(--radius-xl);
+  border-top-right-radius: var(--radius-xl);
+}
+
+.card:hover {
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+  transition: box-shadow .2s ease, transform .2s ease;
+}
+
+.card .kpi {
+  background: var(--bg-elev-2);
+  border: 1px dashed var(--line-color);
+  border-radius: var(--radius-md);
+  padding: .5rem .75rem;
+}
+
+/* Compact variant */
+.card-compact .card-body {
+  padding: .75rem 1rem;
+}
+
+/* --- Buttons ------------------------------------------------------------- */
+.btn {
+  border-radius: var(--radius-md);
+  transition: transform .05s ease, box-shadow .2s ease, background-color .2s ease, color .2s ease;
+}
+
+.btn:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Soft variants that harmonize with Bootstrap */
+.btn-soft-primary {
+  color: #0b66e6;
+  background: rgba(13, 110, 253, 0.12);
+  border: 1px solid rgba(13, 110, 253, 0.25);
+}
+
+.btn-soft-primary:hover {
+  background: rgba(13, 110, 253, 0.18);
+}
+
+.btn-soft-secondary {
+  color: #606e79;
+  background: rgba(108, 117, 125, 0.14);
+  border: 1px solid rgba(108, 117, 125, 0.25);
+}
+
+.btn-soft-success {
+  color: #167448;
+  background: rgba(25, 135, 84, 0.14);
+  border: 1px solid rgba(25, 135, 84, 0.25);
+}
+
+.btn-soft-warning {
+  color: #996c00;
+  background: rgba(255, 193, 7, 0.16);
+  border: 1px solid rgba(255, 193, 7, 0.24);
+}
+
+.btn-soft-danger {
+  color: #b02a37;
+  background: rgba(220, 53, 69, 0.14);
+  border: 1px solid rgba(220, 53, 69, 0.25);
+}
+
+/* Icon-only button size helper */
+.btn-icon {
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  display: inline-grid;
+  place-items: center;
+  border-radius: var(--radius-md);
+}
+
+/* --- Inputs & Forms ------------------------------------------------------ */
+.form-control,
+.form-select {
+  border-radius: var(--radius-md);
+  border-color: var(--line-strong);
+  background-color: var(--bg-elev-1);
+  color: var(--text-body);
+}
+
+.form-control:focus,
+.form-select:focus {
+  background-color: var(--bg-elev-1);
+  color: var(--text-body);
+  border-color: var(--brand-primary);
+  box-shadow: var(--focus-ring);
+}
+
+.input-group-text {
+  background-color: var(--bg-muted);
+  border-color: var(--line-strong);
+}
+
+/* Inline help + validation */
+.form-text {
+  color: var(--text-muted);
+}
+
+.is-invalid~.invalid-feedback {
+  display: block;
+}
+
+/* --- Chips / Badges (status) -------------------------------------------- */
+.badge-soft {
+  border: 1px solid var(--line-color);
+  background: var(--bg-muted);
+  color: var(--text-body);
+  border-radius: 999px;
+  padding: .25rem .5rem;
+  font-weight: 600;
+}
+
+.badge-approved {
+  background: rgba(25, 135, 84, .12);
+  color: var(--brand-success);
+  border-color: rgba(25, 135, 84, .25);
+}
+
+.badge-pending {
+  background: rgba(255, 193, 7, .16);
+  color: #996c00;
+  border-color: rgba(255, 193, 7, .24);
+}
+
+.badge-rejected {
+  background: rgba(220, 53, 69, .14);
+  color: #b02a37;
+  border-color: rgba(220, 53, 69, .25);
+}
+
+.badge-info {
+  background: rgba(13, 202, 240, .14);
+  color: #0b97ad;
+  border-color: rgba(13, 202, 240, .25);
+}
+
+/* --- Breadcrumbs / Toolbar Hooks ---------------------------------------- */
+.breadcrumb {
+  --bs-breadcrumb-divider-color: var(--text-muted);
+  --bs-breadcrumb-item-active-color: var(--text-body);
+  color: var(--text-muted);
+  margin-bottom: var(--space-4);
+}
+
+.page-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  align-items: center;
+  justify-content: flex-end;
+}
+
+/* --- Sidebar polish (if applicable) ------------------------------------- */
+.sidebar-mini .nav-link {
+  display: grid;
+  grid-template-columns: 1.75rem 1fr;
+  gap: .5rem;
+  align-items: center;
+}
+
+.sidebar .nav-link .badge {
+  margin-left: auto;
+}
+
+/* --- Empty States -------------------------------------------------------- */
+.empty-state {
+  text-align: center;
+  padding: var(--space-6);
+  border: 1px dashed var(--line-color);
+  border-radius: var(--radius-lg);
+  background: var(--bg-elev-1);
+}
+
+.empty-state .icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  display: inline-grid;
+  place-items: center;
+  margin-bottom: var(--space-3);
+  background: var(--bg-muted);
+  border: 1px solid var(--line-color);
+}
+
+.empty-state .title {
+  font-weight: 600;
+  margin-bottom: .25rem;
+}
+
+.empty-state .hint {
+  color: var(--text-muted);
+}
+
+/* --- Skeletons / Loading ------------------------------------------------- */
+@keyframes pulse {
+  0% {
+    opacity: .6;
   }
-  .sidebar .nav-link:hover{
-    background:rgba(13,110,253,.08);
-    color:var(--primary);
-  }
-  .sidebar .nav-section{ letter-spacing:.08em; font-size: 0.7rem; }
 
-  @media (max-width: 991.98px){
-    .sidebar{
-      position:fixed; z-index:1040; top:56px; left:0; transform:translateX(-100%);
-      max-height:calc(100vh - 56px); overflow:auto; box-shadow:0 0.25rem 0.75rem rgba(0,0,0,.08);
-    }
-    .sidebar.sidebar-open{ transform:translateX(0); }
-    #content{ width:100%; }
+  50% {
+    opacity: .35;
   }
 
-  /* Cards */
-  .card{ background:var(--card); border-radius:1rem; }
-
-  /* --- Additional sidebar styles --- */
-.sidebar .nav-btn {
-  width: 100%;
-  border: 0;
-  background: transparent;
-  text-align: left;
-  color: var(--text);
-  border-radius: .5rem;
-  font-size: 0.9rem;
-  font-weight: 500;
-  padding: 0.5rem 0.75rem;
-}
-.sidebar .nav-btn:hover {
-  background: rgba(13,110,253,.08);
-  color: var(--primary);
+  100% {
+    opacity: .6;
+  }
 }
 
-/* Active pill */
-.sidebar .nav-link.active,
-.sidebar .nav-link[aria-expanded="true"],
-.sidebar .nav-btn[aria-expanded="true"] {
-  background: rgba(13,110,253,.12);
-  color: var(--primary);
+.skeleton {
+  border-radius: .375rem;
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.06), rgba(0, 0, 0, 0.06) 20%, rgba(255, 255, 255, 0.06) 40%);
+  animation: pulse 1.6s ease-in-out infinite;
 }
 
-/* Chevron rotates when open */
-.sidebar .nav-link[aria-expanded="true"] .bi-chevron-down,
-.sidebar .nav-btn[aria-expanded="true"] .bi-chevron-down {
-  transform: rotate(180deg);
-  transition: transform .15s;
+[data-theme="dark"] .skeleton {
+  background: linear-gradient(90deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.04) 20%, rgba(255, 255, 255, 0.08) 40%);
 }
 
-/* --- Mini sidebar (icon-only) --- */
-.sidebar-mini {
-  width: 72px !important;
+.skeleton-line {
+  height: .75rem;
+  margin-bottom: .5rem;
 }
-.sidebar-mini .nav-section,
-.sidebar-mini .nav-label {
-  display: none !important;
+
+.skeleton-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
-.sidebar-mini .nav .nav-link,
-.sidebar-mini .nav .nav-btn {
-  justify-content: center;
+
+.skeleton-card {
+  height: 140px;
 }
-.sidebar-mini .collapse {
-  display: none !important;
+
+/* --- Progress / KPI helpers --------------------------------------------- */
+.progress {
+  background-color: var(--bg-muted);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-md);
+  height: .75rem;
+}
+
+.progress-bar {
+  border-radius: var(--radius-md);
+}
+
+/* --- Tables -------------------------------------------------------------- */
+.table {
+  --bs-table-striped-bg: rgba(2, 6, 23, 0.02);
+  --bs-table-hover-bg: rgba(2, 6, 23, 0.04);
+  color: var(--text-body);
+}
+
+.table thead th {
+  border-bottom: 1px solid var(--line-strong);
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.table td,
+.table th {
+  border-color: var(--line-color);
+}
+
+.table-sm td,
+.table-sm th {
+  padding-top: .5rem;
+  padding-bottom: .5rem;
+}
+
+/* --- Tooltips / Popovers ------------------------------------------------- */
+.tooltip-inner {
+  background-color: var(--text-body);
+  color: var(--bg-body);
+}
+
+.bs-tooltip-auto[data-popper-placement^=top] .tooltip-arrow::before,
+.bs-tooltip-top .tooltip-arrow::before {
+  border-top-color: var(--text-body);
+}
+
+/* --- Charts (Chart.js reads these via JS) -------------------------------- */
+:root {
+  --chart-area-bg: transparent;
+}
+
+.chart-surface {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+}
+
+/* --- Gradients (subtle usage) ------------------------------------------- */
+.surface-gradient {
+  background: var(--grad-surface);
+}
+
+/* --- Focus & Accessibility ---------------------------------------------- */
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible,
+.form-control:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+/* Ensure sufficient color contrast on primary elements */
+.btn-primary,
+.alert-primary,
+.badge.bg-primary {
+  filter: saturate(1.02) contrast(1.02);
+}
+
+/* --- Responsive tweaks --------------------------------------------------- */
+@media (max-width: 991.98px) {
+  .section {
+    padding-block: var(--space-5);
+  }
+
+  .card-compact .card-body {
+    padding: .75rem;
+  }
+
+  .page-toolbar {
+    justify-content: flex-start;
+  }
+}
+
+@media (max-width: 767.98px) {
+  .hide-sm {
+    display: none !important;
+  }
+
+  .table-responsive-sm {
+    overflow-x: auto;
+  }
+
+  .btn-icon {
+    width: 2rem;
+    height: 2rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .container-xl.g-wide {
+    max-width: 1320px;
+  }
+}
+
+/* --- Utility helpers ----------------------------------------------------- */
+.rounded-xl {
+  border-radius: var(--radius-xl) !important;
+}
+
+.shadow-soft {
+  box-shadow: var(--shadow-sm) !important;
+}
+
+.shadow-lift:hover {
+  box-shadow: var(--shadow-md) !important;
+  transform: translateY(-1px);
+}
+
+.border-subtle {
+  border: 1px solid var(--line-color) !important;
+}
+
+.text-muted-strong {
+  color: var(--text-muted) !important;
+}
+
+.bg-muted {
+  background-color: var(--bg-muted) !important;
+}
+
+/* Status row highlights (e.g., leave approvals) */
+.tr-approved {
+  background: rgba(25, 135, 84, 0.06);
+}
+
+.tr-pending {
+  background: rgba(255, 193, 7, 0.08);
+}
+
+.tr-rejected {
+  background: rgba(220, 53, 69, 0.06);
+}
+
+/* --- Minimal gradient header option ------------------------------------- */
+.app-header-gradient {
+  background: linear-gradient(180deg, rgba(0, 0, 0, 0.04), rgba(0, 0, 0, 0));
+  border-bottom: 1px solid var(--line-color);
+}
+
+/* --- Calendar/Heatmap placeholders -------------------------------------- */
+.calendar-cell {
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-elev-1);
+}
+
+.calendar-cell[data-level="1"] {
+  background: rgba(13, 110, 253, 0.08);
+}
+
+.calendar-cell[data-level="2"] {
+  background: rgba(13, 110, 253, 0.16);
+}
+
+.calendar-cell[data-level="3"] {
+  background: rgba(13, 110, 253, 0.24);
+}
+
+/* --- Animations ---------------------------------------------------------- */
+.transition-base {
+  transition: background-color .2s ease, color .2s ease, border-color .2s ease, box-shadow .2s ease, transform .2s ease;
+}
+
+/* --- Print tweaks -------------------------------------------------------- */
+@media print {
+
+  .sidebar,
+  .page-toolbar,
+  .btn,
+  nav,
+  .breadcrumb {
+    display: none !important;
+  }
+
+  .card {
+    box-shadow: none;
+    border-color: #bbb;
+  }
+
+  body {
+    color: #000;
+    background: #fff;
+  }
 }

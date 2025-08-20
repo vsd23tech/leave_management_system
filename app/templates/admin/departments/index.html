@@ -1,0 +1,161 @@
+{% extends "base.html" %}
+{% block title %}Departments · Leave Management System{% endblock %}
+
+{% block content %}
+<section class="section container-fluid">
+    <!-- Page header -->
+    <div class="d-flex align-items-center justify-content-between flex-wrap g-gap-2 mb-3">
+        <div class="d-flex align-items-center g-gap-2">
+            <h1 class="h3 m-0">Departments</h1>
+            <span class="badge badge-soft text-muted-strong">{{ total_count or (departments|length if departments is
+                defined else 0) }} total</span>
+        </div>
+
+        <!-- Actions / Toolbar -->
+        <div class="page-toolbar">
+            <form class="d-flex align-items-center g-gap-2" method="get" role="search" aria-label="Search departments">
+                <div class="input-group">
+                    <span class="input-group-text" id="search-label">
+                        <i class="bi bi-search" aria-hidden="true"></i>
+                    </span>
+                    <input type="search" class="form-control" name="q" value="{{ request.args.get('q', '') }}"
+                        placeholder="Search name, code…" aria-labelledby="search-label">
+                </div>
+
+                <select class="form-select" name="status" aria-label="Filter by status">
+                    <option value="">All statuses</option>
+                    <option value="active" {{ 'selected' if request.args.get('status')=='active' else '' }}>Active
+                    </option>
+                    <option value="inactive" {{ 'selected' if request.args.get('status')=='inactive' else '' }}>Inactive
+                    </option>
+                </select>
+
+                <button type="submit" class="btn btn-soft-secondary">
+                    Apply
+                </button>
+
+                <a href="{{ url_for('admin.departments_create') }}" class="btn btn-primary">
+                    <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
+                    New Department
+                </a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Breadcrumbs -->
+    {% include "partials/_breadcrumbs.html" with context %}
+
+    <!-- Results -->
+    {% if departments and departments|length %}
+    <div class="card shadow-soft">
+        <div class="card-body card-compact">
+            <div class="table-responsive-sm">
+                <table class="table align-middle table-hover mb-0">
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col" class="hide-sm">Code</th>
+                            <th scope="col">Parent</th>
+                            <th scope="col" class="text-center">Status</th>
+                            <th scope="col" class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for d in departments %}
+                        <tr
+                            class="{% if d.status == 'active' %}tr-approved{% elif d.status == 'inactive' %}tr-rejected{% endif %}">
+                            <td>
+                                <div class="fw-semibold">{{ d.name }}</div>
+                                {% if d.description %}
+                                <div class="small text-muted">{{ d.description }}</div>
+                                {% endif %}
+                            </td>
+                            <td class="hide-sm text-muted">{{ d.code or '-' }}</td>
+                            <td>
+                                {% if d.parent %}
+                                <span class="text-muted">{{ d.parent.name }}</span>
+                                {% else %}
+                                <span class="text-muted">—</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-center">
+                                {% if d.status == 'active' %}
+                                <span class="badge badge-soft badge-approved">Active</span>
+                                {% elif d.status == 'inactive' %}
+                                <span class="badge badge-soft badge-rejected">Inactive</span>
+                                {% else %}
+                                <span class="badge badge-soft badge-info">{{ d.status|capitalize }}</span>
+                                {% endif %}
+                            </td>
+                            <td class="text-end">
+                                <fieldset class="btn-group" aria-label="Row actions for {{ d.name }}">
+                                    <a href="{{ url_for('admin.departments_edit', id=d.id) }}"
+                                        class="btn btn-sm btn-soft-secondary">
+                                        <i class="bi bi-pencil-square me-1" aria-hidden="true"></i>
+                                        Edit
+                                    </a>
+                                    <a href="{{ url_for('admin.departments_view', id=d.id) }}"
+                                        class="btn btn-sm btn-soft-primary">
+                                        <i class="bi bi-eye me-1" aria-hidden="true"></i>
+                                        View
+                                    </a>
+                                    <form action="{{ url_for('admin.departments_delete', id=d.id) }}" method="post"
+                                        class="d-inline"
+                                        onsubmit="return confirm('Delete {{ d.name }}? This cannot be undone.');">
+                                        {{ csrf_token() if csrf_token is defined }}
+                                        <button type="submit" class="btn btn-sm btn-soft-danger">
+                                            <i class="bi bi-trash3 me-1" aria-hidden="true"></i>
+                                            Delete
+                                        </button>
+                                    </form>
+                                </fieldset>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Pagination (optional) -->
+            {% if pagination %}
+            <nav class="d-flex justify-content-between align-items-center mt-3" aria-label="Page navigation">
+                <div class="small text-muted">
+                    Showing {{ pagination.start_index }}–{{ pagination.end_index }} of {{ pagination.total }}
+                </div>
+                <ul class="pagination mb-0">
+                    <li class="page-item {{ 'disabled' if not pagination.prev }}">
+                        <a class="page-link" href="{{ pagination.prev or '#' }}" aria-label="Previous">
+                            <span aria-hidden="true">&laquo;</span>
+                        </a>
+                    </li>
+                    {% for p in pagination.pages %}
+                    <li class="page-item {{ 'active' if p.active else '' }}">
+                        <a class="page-link" href="{{ p.url }}">{{ p.num }}</a>
+                    </li>
+                    {% endfor %}
+                    <li class="page-item {{ 'disabled' if not pagination.next }}">
+                        <a class="page-link" href="{{ pagination.next or '#' }}" aria-label="Next">
+                            <span aria-hidden="true">&raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <!-- Empty State -->
+    <div class="empty-state">
+        <div class="icon">
+            <i class="bi bi-diagram-3" aria-hidden="true"></i>
+        </div>
+        <div class="title">No departments yet</div>
+        <div class="hint mb-3">Create your first department to get started.</div>
+        <a href="{{ url_for('admin.departments_create') }}" class="btn btn-primary">
+            <i class="bi bi-plus-lg me-1" aria-hidden="true"></i>
+            New Department
+        </a>
+    </div>
+    {% endif %}
+</section>
+{% endblock %}

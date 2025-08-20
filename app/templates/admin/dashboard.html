@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{# Pass #1 – UI/UX polish with proper separation of concerns.
+- This template is markup-only.
+- Visual styles live in: /static/css/dashboard.css
+- Behavior (charts, data binding, skeleton toggles) in: /static/js/dashboard.js
+- Dummy data in: /static/data/dashboard.json
+#}
+
+{% block head_extras %}
+{{ super() }}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/dashboard.css') }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+<main class="dash-wrap" aria-labelledby="dashboard-title">
+    <!-- Header / Actions -->
+    <div class="dash-header">
+        <div>
+            <h1 id="dashboard-title" class="dash-h1">Dashboard</h1>
+            <p class="dash-eyebrow">Overview of leave utilization, trends, and pending actions</p>
+        </div>
+        <fieldset class="dash-actions" aria-label="Quick actions">
+            <a href="#" class="btn btn-primary">Apply Leave</a>
+            <a href="#" class="btn btn-soft">My Balance</a>
+            <span class="chip chip-accent d-none d-lg-inline" aria-label="Fiscal year">FY 24–25</span>
+        </fieldset>
+    </div>
+
+    <!-- Search -->
+    <div class="dash-search">
+        <label for="globalSearch" class="visually-hidden">Search (employee, policy, docs)</label>
+        <input id="globalSearch" class="form-control" type="search" placeholder="Search (employee / policy / docs)"
+            aria-describedby="searchHelp">
+        <div id="searchHelp" class="form-text muted">Press Enter to search. Use table filters to refine.</div>
+    </div>
+
+    <!-- KPI Row -->
+    <section class="dash-section" aria-label="Key metrics">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
+            <div class="col">
+                <div class="card card-soft kpi-card" aria-live="polite">
+                    <div class="card-body">
+                        <div class="kpi-value" id="kpi-balance" data-kpi="available_balance">—</div>
+                        <div class="kpi-label">Available balance (days)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-soft kpi-card">
+                    <div class="card-body">
+                        <div class="kpi-value" id="kpi-used" data-kpi="used_this_fy">—</div>
+                        <div class="kpi-label">Used this FY (days)</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-soft kpi-card">
+                    <div class="card-body">
+                        <div class="kpi-value" id="kpi-open" data-kpi="open_requests">—</div>
+                        <div class="kpi-label">Open requests</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card card-soft kpi-card">
+                    <div class="card-body">
+                        <div class="kpi-value" id="kpi-awaiting" data-kpi="awaiting_approval">—</div>
+                        <div class="kpi-label">Awaiting my approval</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Charts -->
+    <section class="dash-section" aria-label="Leave charts">
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="card card-soft">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h2 class="dash-h3 mb-0">Weekly Leave Pattern</h2>
+                        <span class="chip chip-success">This month</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="weeklySkeleton" class="skeleton" aria-label="Loading weekly chart">Loading...</div>
+                        <canvas id="weeklyChart" class="chart-canvas" height="220" aria-label="Weekly chart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card card-soft">
+                    <div class="card-header d-flex align-items-center justify-content-between">
+                        <h2 class="dash-h3 mb-0">Monthly Leave Trend</h2>
+                        <span class="chip chip-warning">FY 24–25</span>
+                    </div>
+                    <div class="card-body">
+                        <div id="monthlySkeleton" class="skeleton" aria-label="Loading monthly chart">Loading...</div>
+                        <canvas id="monthlyChart" class="chart-canvas" height="220" aria-label="Monthly chart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Leave Type Cards -->
+    <section class="dash-section" aria-label="Leave type summary">
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-5 g-4">
+            {% for t in ['Sick Leave','Earned Leave','Casual Leave','Unpaid Leave','Floater Leave'] %}
+            <div class="col">
+                <div class="card card-soft h-100">
+                    <div class="card-body">
+                        <h3 class="dash-h3 mb-2">{{ t }}</h3>
+                        <div class="muted">Available / Consumed / Annual</div>
+                        <div class="mt-2 leave-type-fig" id="type-{{ loop.index }}-numbers" aria-live="polite">—</div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+
+    <!-- Recent Activity -->
+    <section class="dash-section" aria-label="Recent activity">
+        <div class="card card-soft">
+            <div class="card-body">
+                <div class="d-flex align-items-center justify-content-between flex-wrap gap-2 mb-3">
+                    <h2 class="dash-h3 mb-0">Recent Activity</h2>
+                    <div class="d-flex gap-2">
+                        <label class="visually-hidden" for="filter-status">Status</label>
+                        <select id="filter-status" class="form-select form-select-sm w-auto" aria-label="Status filter">
+                            <option selected>Status</option>
+                            <option>Approved</option>
+                            <option>Pending</option>
+                            <option>Rejected</option>
+                        </select>
+                        <label class="visually-hidden" for="filter-type">Leave Type</label>
+                        <select id="filter-type" class="form-select form-select-sm w-auto"
+                            aria-label="Leave type filter">
+                            <option selected>Leave Type</option>
+                            <option>Sick</option>
+                            <option>Earned</option>
+                            <option>Casual</option>
+                            <option>Unpaid</option>
+                            <option>Floater</option>
+                        </select>
+                        <button class="btn btn-soft btn-sm" type="button">Filters</button>
+                    </div>
+                </div>
+
+                <div id="activityEmpty" class="empty" aria-live="polite">No recent activity to show.</div>
+
+                <div class="table-responsive">
+                    <table class="table align-middle mb-0" role="table" aria-label="Recent Activity table">
+                        <thead class="table-head-muted">
+                            <tr role="row">
+                                <th scope="col">Date</th>
+                                <th scope="col">Type</th>
+                                <th scope="col">Days</th>
+                                <th scope="col">Status</th>
+                                <th scope="col">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody id="activityRows">
+                            <!-- Rows injected by dashboard.js -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+    </div>
+    {% endblock %}
+
+    {% block body_extras %}
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    {% endblock %}

@@ -1,0 +1,25 @@
+{# ==========================================================================
+Breadcrumbs Partial
+Usage:
+{% include "partials/_breadcrumbs.html" with context %}
+Provide a `crumbs` list in the template context:
+crumbs = [
+{"label": "Dashboard", "url": url_for('admin.dashboard')},
+{"label": "Departments", "url": url_for('admin.departments_list')},
+{"label": "Edit", "url": None} # url=None marks it as current page
+]
+========================================================================== #}
+
+<nav aria-label="Breadcrumb">
+    <ol class="breadcrumb mb-3">
+        {% for crumb in crumbs %}
+        {% if not loop.last and crumb.url %}
+        <li class="breadcrumb-item">
+            <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+        </li>
+        {% else %}
+        <li class="breadcrumb-item active" aria-current="page">{{ crumb.label }}</li>
+        {% endif %}
+        {% endfor %}
+    </ol>
+</nav>

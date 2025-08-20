@@ -1,0 +1,85 @@
+{
+    "kpis": {
+        "available_balance": 12,
+        "used_this_fy": 8,
+        "open_requests": 2,
+        "awaiting_approval": 1
+    },
+    "leaveTypes": {
+        "labels": [
+            "Sick Leave",
+            "Earned Leave",
+            "Casual Leave",
+            "Unpaid Leave",
+            "Floater Leave"
+        ],
+        "datasets": [
+            {
+                "label": "Leave Distribution",
+                "data": [
+                    5,
+                    3,
+                    2,
+                    1,
+                    1
+                ],
+                "backgroundColor": [
+                    "rgba(13, 110, 253, 0.8)",
+                    "rgba(25, 135, 84, 0.8)",
+                    "rgba(255, 193, 7, 0.8)",
+                    "rgba(220, 53, 69, 0.8)",
+                    "rgba(13, 202, 240, 0.8)"
+                ]
+            }
+        ]
+    },
+    "monthlyLeaves": {
+        "labels": [
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep"
+        ],
+        "datasets": [
+            {
+                "label": "Leaves Taken",
+                "data": [
+                    2,
+                    1,
+                    3,
+                    0,
+                    2,
+                    1
+                ],
+                "fill": false,
+                "borderColor": "rgba(13, 110, 253, 0.9)",
+                "tension": 0.1
+            }
+        ]
+    },
+    "recentActivity": [
+        {
+            "date": "2025-08-01",
+            "type": "Sick Leave",
+            "days": 2,
+            "status": "Approved",
+            "remarks": "Flu recovery"
+        },
+        {
+            "date": "2025-07-15",
+            "type": "Casual Leave",
+            "days": 1,
+            "status": "Rejected",
+            "remarks": "Project delivery week"
+        },
+        {
+            "date": "2025-07-05",
+            "type": "Earned Leave",
+            "days": 3,
+            "status": "Pending",
+            "remarks": "Family trip"
+        }
+    ]
+}

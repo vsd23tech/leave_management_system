@@ -7,7 +7,7 @@ from app.models.department import Department
 from . import bp
 
 
-@bp.get("/departments")
+@bp.route("/departments")
 def list_departments():
     session = get_session()
     departments = session.execute(select(Department).order_by(Department.name)).scalars().all()

@@ -14,10 +14,8 @@ services:
       # Use container env at runtime; $$ escapes so compose doesn't
       # substitute at parse time
       test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U \"$${DB_USER:-lms_user}\" -d \"$${DB_NAME:-lms_db}\"",
-        ]
+        - "CMD-SHELL"
+        - "pg_isready -U \"$${DB_USER:-lms_user}\" -d \"$${DB_NAME:-lms_db}\""
       interval: 5s
       timeout: 3s
       retries: 10
