@@ -1,31 +1,268 @@
 {% extends "base.html" %}
 {% block title %}Apply Leave{% endblock %}
 
+{% block head_extras %}
+{{ super() }}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+{% endblock %}
+
 {% block content %}
 <main class="dash-wrap">
+    <!-- Header -->
     <div class="dash-header">
-        <div>
-            <h1 class="dash-h1">Apply for Leave</h1>
-            <p class="dash-eyebrow">Submit a new leave request</p>
-        </div>
-        <div class="dash-actions">
-            <a href="{{ url_for('employee.dashboard') }}" class="btn btn-soft">
-                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
-            </a>
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="header-left">
+                <a href="{{ url_for('employee.dashboard') }}" class="btn btn-icon"
+                   data-bs-toggle="tooltip" data-bs-placement="bottom"
+                   title="Back to Dashboard">
+                    <i class="bi bi-arrow-left"></i>
+                </a>
+            </div>
+            <div class="header-center text-center">
+                <h1 class="dash-h1">Apply for Leave</h1>
+                <p class="dash-eyebrow">Select leave type, dates, and provide reason</p>
+            </div>
+            <div class="header-right">
+                <!-- Empty space for balance -->
+            </div>
         </div>
     </div>
 
-    <div class="card card-soft">
-        <div class="card-body">
-            <p class="text-muted">Leave application form will be implemented here.</p>
-            <p>This will include:</p>
-            <ul>
-                <li>Leave type selection</li>
-                <li>Date range picker</li>
-                <li>Reason/remarks</li>
-                <li>Approver selection</li>
-            </ul>
+    <!-- Leave Type Selection -->
+    <section class="dash-section">
+        <h3 class="dash-h3">Select Leave Type</h3>
+        <div class="row g-4">
+            <!-- Row 1 -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="sick" data-available="15">
+                    <div class="leave-type-icon icon-primary">
+                        <i class="bi bi-heart-pulse"></i>
+                    </div>
+                    <h5 class="leave-type-title">Sick Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">15 days</span> available
+                    </div>
+                    <div class="leave-type-description">Medical appointments, illness, recovery</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="earned" data-available="25">
+                    <div class="leave-type-icon icon-success">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+                    <h5 class="leave-type-title">Earned Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">25 days</span> available
+                    </div>
+                    <div class="leave-type-description">Vacation, personal time, family events</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="casual" data-available="10">
+                    <div class="leave-type-icon icon-warning">
+                        <i class="bi bi-calendar-event"></i>
+                    </div>
+                    <h5 class="leave-type-title">Casual Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">10 days</span> available
+                    </div>
+                    <div class="leave-type-description">Short breaks, appointments, emergencies</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="unpaid" data-available="0">
+                    <div class="leave-type-icon icon-info">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+                    <h5 class="leave-type-title">Unpaid Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">Unlimited</span> available
+                    </div>
+                    <div class="leave-type-description">Extended time off, sabbatical</div>
+                </div>
+            </div>
+
+            <!-- Row 2 -->
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="maternity" data-available="180">
+                    <div class="leave-type-icon icon-success">
+                        <i class="bi bi-heart"></i>
+                    </div>
+                    <h5 class="leave-type-title">Maternity Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">180 days</span> available
+                    </div>
+                    <div class="leave-type-description">Pregnancy and childbirth recovery</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="paternity" data-available="15">
+                    <div class="leave-type-icon icon-info">
+                        <i class="bi bi-person-heart"></i>
+                    </div>
+                    <h5 class="leave-type-title">Paternity Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">15 days</span> available
+                    </div>
+                    <div class="leave-type-description">Support during partner's pregnancy</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="compensatory" data-available="5">
+                    <div class="leave-type-icon icon-warning">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+                    <h5 class="leave-type-title">Compensatory Off</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">5 days</span> available
+                    </div>
+                    <div class="leave-type-description">Time off for overtime work</div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="leave-type-card" data-leave-type="bereavement" data-available="7">
+                    <div class="leave-type-icon icon-danger">
+                        <i class="bi bi-rose"></i>
+                    </div>
+                    <h5 class="leave-type-title">Bereavement Leave</h5>
+                    <div class="leave-type-balance">
+                        <span class="available">7 days</span> available
+                    </div>
+                    <div class="leave-type-description">Loss of family member or close relative</div>
+                </div>
+            </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Date Selection -->
+    <section class="dash-section">
+        <h3 class="dash-h3">Select Leave Period</h3>
+        <div class="row g-4">
+            <div class="col-12 col-lg-8">
+                <div class="card card-soft">
+                    <div class="card-body">
+                        <div class="row g-4">
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">Start Date</label>
+                                <input type="text" id="start-date" class="form-control date-picker"
+                                    placeholder="Select start date" required>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                <label class="form-label">End Date</label>
+                                <input type="text" id="end-date" class="form-control date-picker"
+                                    placeholder="Select end date" required>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <div class="duration-display">
+                                <span class="duration-label">Duration:</span>
+                                <span class="duration-value" id="duration-value">0 days</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-4">
+                <div class="card card-soft">
+                    <div class="card-body text-center">
+                        <div class="leave-balance-preview">
+                            <h6>Leave Balance</h6>
+                            <div class="balance-circle" id="balance-circle">
+                                <span class="balance-number" id="balance-number">15</span>
+                                <span class="balance-label">days</span>
+                            </div>
+                            <div class="balance-info">
+                                <div class="balance-breakdown">
+                                    <div class="balance-row">
+                                        <small class="text-muted">Previous Balance:</small>
+                                        <small class="fw-bold" id="previous-balance">15 days</small>
+                                    </div>
+                                    <div class="balance-row">
+                                        <small class="text-muted">Leave Applied For:</small>
+                                        <small class="fw-bold" id="applied-days">0 days</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Reason & Submit -->
+    <section class="dash-section">
+        <h3 class="dash-h3">Reason & Submit</h3>
+        <div class="row g-4">
+            <div class="col-12 col-lg-6">
+                <div class="card card-soft">
+                    <div class="card-body">
+                        <label class="form-label">Reason for Leave</label>
+                        <textarea id="leave-reason" class="form-control" rows="3"
+                            placeholder="Please provide a brief reason for your leave request..." maxlength="500"
+                            required></textarea>
+                        <div class="character-count mt-2">
+                            <small class="text-muted">
+                                <span id="char-count">0</span> / 500 characters
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-lg-6">
+                <div class="card card-soft">
+                    <div class="card-body">
+                        <h6 class="mb-3">Supporting Documents</h6>
+                        <div class="document-upload-area" id="document-upload-area">
+                            <div class="upload-zone" id="upload-zone">
+                                <i class="bi bi-cloud-upload upload-icon"></i>
+                                <p class="upload-text">Drag & drop files here or <span class="upload-link" id="browse-files">browse</span></p>
+                                <small class="text-muted">PDF, DOC, JPG, PNG up to 5MB each</small>
+                                <input type="file" id="file-input" multiple accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" style="display: none;">
+                            </div>
+                        </div>
+                        <div class="uploaded-files mt-3" id="uploaded-files" style="display: none;">
+                            <h6 class="mb-2">Uploaded Files</h6>
+                            <div class="file-list" id="file-list"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Actions -->
+        <div class="row g-4 mt-3">
+            <div class="col-12">
+                <div class="card card-soft">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="terms-checkbox">
+                                <label class="form-check-label" for="terms-checkbox">
+                                    I agree to the <a href="#" class="text-primary">leave policy</a> and confirm the information provided is accurate
+                                </label>
+                            </div>
+                            <div class="d-flex gap-2">
+                                <button type="button" id="save-draft" class="btn btn-outline-secondary">
+                                    <i class="bi bi-save me-2"></i>Save Draft
+                                </button>
+                                <button type="button" id="submit-leave" class="btn btn-primary" disabled>
+                                    <i class="bi bi-send me-2"></i>Submit Request
+                                </button>
+                                <a href="{{ url_for('employee.dashboard') }}" class="btn btn-outline-danger">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
+{% endblock %}
+
+{% block body_extras %}
+<script src="{{ url_for('static', filename='js/apply-leave.js') }}"></script>
 {% endblock %}

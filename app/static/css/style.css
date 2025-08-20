@@ -1596,20 +1596,602 @@ button:focus-visible,
   border: 1px solid var(--line-color);
   position: relative;
   overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
 }
 
-.dash-header::before {
+.dash-header .header-left,
+.dash-header .header-right {
+  flex: 0 0 auto;
+  width: 60px; /* Fixed width for balance */
+}
+
+.dash-header .header-center {
+  flex: 1;
+  text-align: center;
+}
+
+/* Icon Button Styling */
+.btn-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--line-color);
+  color: var(--text-body);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  box-shadow: var(--shadow-sm);
+}
+
+.btn-icon:hover {
+  background: var(--bg-elev-3);
+  border-color: var(--brand-primary);
+  color: var(--brand-primary);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-icon i {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+/* Tooltip Customization */
+.tooltip {
+  font-size: 0.875rem;
+}
+
+.tooltip-inner {
+  background-color: var(--bg-elev-3);
+  color: var(--text-body);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-2) var(--space-3);
+  box-shadow: var(--shadow-md);
+}
+
+.bs-tooltip-bottom .tooltip-arrow::before {
+  border-bottom-color: var(--line-color);
+}
+
+.bs-tooltip-bottom .tooltip-arrow::after {
+  border-bottom-color: var(--bg-elev-3);
+}
+
+/* --- Apply Leave Screen Styles --------------------------------------------- */
+.leave-type-card {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-lg);
+  padding: var(--space-4);
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  /* Match dashboard card height */
+
+  /* Premium styling matching dashboard cards */
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.05),
+    0 4px 6px -1px rgba(0, 0, 0, 0.08),
+    0 2px 4px -1px rgba(0, 0, 0, 0.04);
+}
+
+.leave-type-card::before {
   content: '';
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
-  height: 2px;
+  height: 3px;
   background: var(--card-border-primary);
+  opacity: 0.8;
+  z-index: 1;
+}
+
+.leave-type-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    radial-gradient(circle at 20% 80%, rgba(99, 102, 241, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(139, 92, 246, 0.03) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.leave-type-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+  border-color: var(--brand-primary);
+}
+
+.leave-type-card:hover::before {
+  opacity: 1;
+}
+
+.leave-type-card.selected {
+  border-color: var(--brand-primary);
+  background: linear-gradient(135deg, var(--bg-elev-1) 0%, var(--bg-elev-2) 100%);
+  box-shadow: var(--shadow-md);
+}
+
+.leave-type-card.selected::before {
+  opacity: 1;
+}
+
+/* Individual leave type card border colors */
+.leave-type-card[data-leave-type="sick"]::before {
+  background: var(--card-border-primary);
+}
+
+.leave-type-card[data-leave-type="earned"]::before {
+  background: var(--card-border-success);
+}
+
+.leave-type-card[data-leave-type="casual"]::before {
+  background: var(--card-border-warning);
+}
+
+.leave-type-card[data-leave-type="unpaid"]::before {
+  background: var(--card-border-info);
+}
+
+.leave-type-card[data-leave-type="maternity"]::before {
+  background: var(--card-border-success);
+}
+
+.leave-type-card[data-leave-type="paternity"]::before {
+  background: var(--card-border-info);
+}
+
+.leave-type-card[data-leave-type="compensatory"]::before {
+  background: var(--card-border-warning);
+}
+
+.leave-type-card[data-leave-type="bereavement"]::before {
+  background: var(--card-border-danger);
+}
+
+.leave-type-icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-3);
+  box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  transition: all 0.3s ease;
+}
+
+.leave-type-icon i {
+  color: white;
+  font-size: 1.25rem;
+}
+
+.leave-type-card:hover .leave-type-icon {
+  transform: scale(1.1);
+}
+
+.leave-type-title {
+  font-weight: 700;
+  color: var(--text-body);
+  margin-bottom: var(--space-2);
+  font-size: 1rem;
+}
+
+.leave-type-balance {
+  margin-bottom: var(--space-2);
+  font-size: 0.8125rem;
+}
+
+.leave-type-balance .available {
+  font-weight: 700;
+  color: var(--brand-success);
+}
+
+.leave-type-description {
+  color: var(--text-muted);
+  font-size: 0.75rem;
+  line-height: 1.4;
+  flex-grow: 1;
+}
+
+/* Date Picker Styling */
+.date-picker {
+  border: 2px solid var(--line-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  background: var(--bg-elev-1);
+}
+
+.date-picker:focus {
+  border-color: var(--brand-primary);
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+.date-picker:focus-visible {
+  outline: none;
+}
+
+/* Duration Display */
+.duration-display {
+  background: var(--bg-elev-2);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  text-align: center;
+}
+
+.duration-label {
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-right: var(--space-2);
+}
+
+.duration-value {
+  font-weight: 700;
+  color: var(--brand-primary);
+  font-size: 1.125rem;
+}
+
+/* Leave Balance Preview */
+.leave-balance-preview h6 {
+  color: var(--text-body);
+  font-weight: 600;
+  margin-bottom: var(--space-3);
+}
+
+.balance-circle {
+  width: 3.75rem;
+  height: 3.75rem;
+  border-radius: 50%;
+  background: var(--icon-bg-success);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--space-3);
+  color: white;
+  font-weight: 600;
+}
+
+.balance-circle.balance-success {
+  background: var(--icon-bg-success);
+  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+}
+
+.balance-circle.balance-warning {
+  background: var(--icon-bg-warning);
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+}
+
+.balance-circle.balance-info {
+  background: var(--icon-bg-info);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.balance-circle.balance-danger {
+  background: var(--icon-bg-danger);
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+.balance-number {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 0.125rem;
+}
+
+.balance-label {
+  font-size: 0.625rem;
+  font-weight: 500;
+  line-height: 1;
+  opacity: 0.9;
+}
+
+.balance-info {
+  margin-top: var(--space-3);
+}
+
+.balance-breakdown {
+  text-align: left;
+}
+
+.balance-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: var(--space-2);
+  padding: var(--space-1) 0;
+}
+
+.balance-row:last-child {
+  margin-bottom: 0;
+}
+
+.balance-row small {
+  font-size: 0.8125rem;
+}
+
+.balance-row .fw-bold {
+  color: var(--text-body);
+}
+
+/* Form Enhancements */
+.form-label {
+  font-weight: 600;
+  color: var(--text-body);
+  margin-bottom: var(--space-2);
+  font-size: 0.875rem;
+}
+
+.form-control {
+  border: 2px solid var(--line-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-3);
+  font-size: 0.875rem;
+  transition: all 0.3s ease;
+  background: var(--bg-elev-1);
+}
+
+.form-control:focus {
+  border-color: var(--brand-primary);
+  box-shadow: var(--focus-ring);
+  outline: none;
+}
+
+.form-control:focus-visible {
+  outline: none;
+}
+
+textarea.form-control {
+  resize: vertical;
+  min-height: 120px;
+}
+
+.character-count {
+  text-align: right;
+}
+
+/* Warning Message Styling */
+#insufficient-balance-warning {
+  border: 1px solid var(--brand-warning);
+  background: rgba(245, 158, 11, 0.1);
+  color: var(--text-body);
+  font-size: 0.875rem;
+}
+
+#insufficient-balance-warning .alert-warning {
+  border-color: var(--brand-warning);
+}
+
+#insufficient-balance-warning i {
+  color: var(--brand-warning);
+}
+
+/* Button Enhancements for Apply Leave */
+.btn:disabled {
   opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn:disabled:hover {
+  transform: none;
+  box-shadow: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .leave-type-card {
+    margin-bottom: var(--space-3);
+  }
+
+  .balance-circle {
+    width: 5rem;
+    height: 5rem;
+  }
+
+  .balance-number {
+    font-size: 1.25rem;
+  }
+}
+
+/* Flatpickr Customization */
+.flatpickr-calendar {
+  background: var(--bg-elev-1);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  font-family: inherit;
+}
+
+.flatpickr-day {
+  color: var(--text-body);
+  border-radius: var(--radius-sm);
+}
+
+.flatpickr-day:hover {
+  background: var(--brand-primary);
+  color: white;
+}
+
+.flatpickr-day.selected {
+  background: var(--brand-primary);
+  color: white;
+}
+
+.flatpickr-day.today {
+  border-color: var(--brand-primary);
+}
+
+.flatpickr-month {
+  color: var(--text-body);
+}
+
+.flatpickr-weekday {
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* --- Document Upload Styles --------------------------------------------- */
+.document-upload-area {
+  position: relative;
+}
+
+.upload-zone {
+  border: 2px dashed var(--line-color);
+  border-radius: var(--radius-md);
+  padding: var(--space-4);
+  text-align: center;
+  background: var(--bg-elev-1);
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.upload-zone:hover {
+  border-color: var(--brand-primary);
+  background: var(--bg-elev-2);
+}
+
+.upload-zone.dragover {
+  border-color: var(--brand-success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.upload-icon {
+  font-size: 2rem;
+  color: var(--text-muted);
+  margin-bottom: var(--space-2);
+}
+
+.upload-text {
+  margin-bottom: var(--space-2);
+  color: var(--text-body);
+  font-size: 0.875rem;
+}
+
+.upload-link {
+  color: var(--brand-primary);
+  text-decoration: underline;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.upload-link:hover {
+  color: var(--brand-primary-dark);
+}
+
+.file-list {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.file-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--space-2);
+  background: var(--bg-elev-1);
+  border: 1px solid var(--line-color);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--space-2);
+}
+
+.file-item:last-child {
+  margin-bottom: 0;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+}
+
+.file-icon {
+  width: 2rem;
+  height: 2rem;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: var(--space-2);
+  font-size: 0.875rem;
+  color: white;
+}
+
+.file-icon.pdf { background: var(--icon-bg-danger); }
+.file-icon.doc { background: var(--icon-bg-primary); }
+.file-icon.img { background: var(--icon-bg-success); }
+
+.file-details {
+  flex: 1;
+}
+
+.file-name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-body);
+  margin-bottom: 0.125rem;
+  word-break: break-word;
+}
+
+.file-size {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.file-actions {
+  display: flex;
+  gap: var(--space-1);
+}
+
+.file-remove {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  padding: var(--space-1);
+  border-radius: var(--radius-sm);
+  transition: all 0.2s ease;
+}
+
+.file-remove:hover {
+  color: var(--brand-danger);
+  background: rgba(239, 68, 68, 0.1);
+}
+
+/* Terms Checkbox Styling */
+.form-check-input:checked {
+  background-color: var(--brand-primary);
+  border-color: var(--brand-primary);
+}
+
+.form-check-label {
+  font-size: 0.875rem;
+  color: var(--text-body);
+}
+
+.form-check-label a {
+  text-decoration: none;
+}
+
+.form-check-label a:hover {
+  text-decoration: underline;
 }
 
 /* Enhanced section headers */
