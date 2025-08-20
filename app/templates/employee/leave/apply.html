@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Apply Leave{% endblock %}
+
+{% block content %}
+<main class="dash-wrap">
+    <div class="dash-header">
+        <div>
+            <h1 class="dash-h1">Apply for Leave</h1>
+            <p class="dash-eyebrow">Submit a new leave request</p>
+        </div>
+        <div class="dash-actions">
+            <a href="{{ url_for('employee.dashboard') }}" class="btn btn-soft">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card card-soft">
+        <div class="card-body">
+            <p class="text-muted">Leave application form will be implemented here.</p>
+            <p>This will include:</p>
+            <ul>
+                <li>Leave type selection</li>
+                <li>Date range picker</li>
+                <li>Reason/remarks</li>
+                <li>Approver selection</li>
+            </ul>
+        </div>
+    </div>
+</main>
+{% endblock %}

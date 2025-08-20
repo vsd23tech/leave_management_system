@@ -1,85 +1,176 @@
 {
-    "kpis": {
-        "available_balance": 12,
-        "used_this_fy": 8,
-        "open_requests": 2,
-        "awaiting_approval": 1
-    },
-    "leaveTypes": {
-        "labels": [
-            "Sick Leave",
-            "Earned Leave",
-            "Casual Leave",
-            "Unpaid Leave",
-            "Floater Leave"
+  "kpis": {
+    "available_balance": 18,
+    "used_this_fy": 12,
+    "open_requests": 3,
+    "awaiting_approval": 2
+  },
+  "leaveTypes": {
+    "labels": [
+      "Sick Leave",
+      "Earned Leave",
+      "Casual Leave",
+      "Unpaid Leave",
+      "Floater Leave"
+    ],
+    "datasets": [
+      {
+        "label": "Leave Distribution",
+        "data": [8, 15, 5, 2, 3],
+        "backgroundColor": [
+          "rgba(99, 102, 241, 0.8)",
+          "rgba(16, 185, 129, 0.8)",
+          "rgba(245, 158, 11, 0.8)",
+          "rgba(239, 68, 68, 0.8)",
+          "rgba(59, 130, 246, 0.8)"
         ],
-        "datasets": [
-            {
-                "label": "Leave Distribution",
-                "data": [
-                    5,
-                    3,
-                    2,
-                    1,
-                    1
-                ],
-                "backgroundColor": [
-                    "rgba(13, 110, 253, 0.8)",
-                    "rgba(25, 135, 84, 0.8)",
-                    "rgba(255, 193, 7, 0.8)",
-                    "rgba(220, 53, 69, 0.8)",
-                    "rgba(13, 202, 240, 0.8)"
-                ]
-            }
-        ]
-    },
-    "monthlyLeaves": {
-        "labels": [
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep"
+        "borderColor": [
+          "rgba(99, 102, 241, 1)",
+          "rgba(16, 185, 129, 1)",
+          "rgba(245, 158, 11, 1)",
+          "rgba(239, 68, 68, 1)",
+          "rgba(59, 130, 246, 1)"
         ],
-        "datasets": [
-            {
-                "label": "Leaves Taken",
-                "data": [
-                    2,
-                    1,
-                    3,
-                    0,
-                    2,
-                    1
-                ],
-                "fill": false,
-                "borderColor": "rgba(13, 110, 253, 0.9)",
-                "tension": 0.1
-            }
-        ]
-    },
-    "recentActivity": [
-        {
-            "date": "2025-08-01",
-            "type": "Sick Leave",
-            "days": 2,
-            "status": "Approved",
-            "remarks": "Flu recovery"
-        },
-        {
-            "date": "2025-07-15",
-            "type": "Casual Leave",
-            "days": 1,
-            "status": "Rejected",
-            "remarks": "Project delivery week"
-        },
-        {
-            "date": "2025-07-05",
-            "type": "Earned Leave",
-            "days": 3,
-            "status": "Pending",
-            "remarks": "Family trip"
-        }
+        "borderWidth": 2
+      }
     ]
+  },
+  "monthlyLeaves": {
+    "labels": [
+      "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+      "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    ],
+    "datasets": [
+      {
+        "label": "Leaves Taken",
+        "data": [2, 1, 3, 0, 2, 1, 4, 2, 1, 3, 2, 1],
+        "fill": true,
+        "backgroundColor": "rgba(99, 102, 241, 0.1)",
+        "borderColor": "rgba(99, 102, 241, 0.8)",
+        "borderWidth": 3,
+        "tension": 0.4,
+        "pointBackgroundColor": "rgba(99, 102, 241, 1)",
+        "pointBorderColor": "#ffffff",
+        "pointBorderWidth": 2,
+        "pointRadius": 6,
+        "pointHoverRadius": 8
+      }
+    ]
+  },
+  "weeklyPattern": {
+    "labels": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "datasets": [
+      {
+        "label": "Leave Requests",
+        "data": [5, 3, 7, 4, 2, 1, 0],
+        "backgroundColor": "rgba(16, 185, 129, 0.8)",
+        "borderColor": "rgba(16, 185, 129, 1)",
+        "borderWidth": 2,
+        "borderRadius": 8,
+        "borderSkipped": false
+      }
+    ]
+  },
+  "leaveTypeDetails": {
+    "sick_leave": {
+      "available": 15,
+      "consumed": 8,
+      "annual": 15,
+      "percentage": 53
+    },
+    "earned_leave": {
+      "available": 25,
+      "consumed": 15,
+      "annual": 25,
+      "percentage": 60
+    },
+    "casual_leave": {
+      "available": 10,
+      "consumed": 5,
+      "annual": 10,
+      "percentage": 50
+    },
+    "unpaid_leave": {
+      "available": 0,
+      "consumed": 2,
+      "annual": 0,
+      "percentage": 0
+    },
+    "floater_leave": {
+      "available": 5,
+      "consumed": 3,
+      "annual": 5,
+      "percentage": 60
+    }
+  },
+  "recentActivity": [
+    {
+      "date": "2025-08-20",
+      "type": "Sick Leave",
+      "days": 2,
+      "status": "Approved",
+      "remarks": "Flu recovery",
+      "employee": "John Doe",
+      "priority": "high"
+    },
+    {
+      "date": "2025-08-18",
+      "type": "Earned Leave",
+      "days": 3,
+      "status": "Pending",
+      "remarks": "Family vacation",
+      "employee": "Jane Smith",
+      "priority": "medium"
+    },
+    {
+      "date": "2025-08-15",
+      "type": "Casual Leave",
+      "days": 1,
+      "status": "Approved",
+      "remarks": "Personal appointment",
+      "employee": "Mike Johnson",
+      "priority": "low"
+    },
+    {
+      "date": "2025-08-12",
+      "type": "Unpaid Leave",
+      "days": 1,
+      "status": "Rejected",
+      "remarks": "Project delivery week",
+      "employee": "Sarah Wilson",
+      "priority": "high"
+    },
+    {
+      "date": "2025-08-10",
+      "type": "Floater Leave",
+      "days": 1,
+      "status": "Approved",
+      "remarks": "Emergency",
+      "employee": "Tom Brown",
+      "priority": "high"
+    }
+  ],
+  "teamStats": {
+    "totalEmployees": 45,
+    "onLeaveToday": 3,
+    "pendingApprovals": 7,
+    "leaveUtilization": 68
+  },
+  "upcomingHolidays": [
+    {
+      "date": "2025-09-01",
+      "name": "Labor Day",
+      "type": "Public Holiday"
+    },
+    {
+      "date": "2025-10-13",
+      "name": "Columbus Day",
+      "type": "Public Holiday"
+    },
+    {
+      "date": "2025-11-11",
+      "name": "Veterans Day",
+      "type": "Public Holiday"
+    }
+  ]
 }

@@ -14,19 +14,23 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 {% endblock %}
 
+{% block sidebar %}
+{% include "partials/sidebar.html" %}
+{% endblock %}
+
 {% block content %}
-<main class="dash-wrap" aria-labelledby="dashboard-title">
+<main class="dash-wrap" role="main" aria-labelledby="dashboard-title">
     <!-- Header / Actions -->
     <div class="dash-header">
         <div>
             <h1 id="dashboard-title" class="dash-h1">Dashboard</h1>
             <p class="dash-eyebrow">Overview of leave utilization, trends, and pending actions</p>
         </div>
-        <fieldset class="dash-actions" aria-label="Quick actions">
+        <div class="dash-actions" role="group" aria-label="Quick actions">
             <a href="#" class="btn btn-primary">Apply Leave</a>
             <a href="#" class="btn btn-soft">My Balance</a>
             <span class="chip chip-accent d-none d-lg-inline" aria-label="Fiscal year">FY 24–25</span>
-        </fieldset>
+        </div>
     </div>
 
     <!-- Search -->
@@ -171,9 +175,9 @@
             </div>
         </div>
     </section>
-    </div>
-    {% endblock %}
+</main>
+{% endblock %}
 
-    {% block body_extras %}
-    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
-    {% endblock %}
+{% block body_extras %}
+<script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<main class="dash-wrap">
+    <div class="dash-header">
+        <div>
+            <h1 class="dash-h1">My Profile</h1>
+            <p class="dash-eyebrow">View and update your personal information</p>
+        </div>
+        <div class="dash-actions">
+            <a href="{{ url_for('employee.dashboard') }}" class="btn btn-soft">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card card-soft">
+        <div class="card-body">
+            <p class="text-muted">Employee profile management will be implemented here.</p>
+            <p>This will include:</p>
+            <ul>
+                <li>Personal information</li>
+                <li>Contact details</li>
+                <li>Leave entitlements</li>
+                <li>Work schedule</li>
+                <li>Preferences</li>
+            </ul>
+        </div>
+    </div>
+</main>
+{% endblock %}

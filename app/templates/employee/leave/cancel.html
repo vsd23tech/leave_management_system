@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Cancel Leave{% endblock %}
+
+{% block content %}
+<main class="dash-wrap">
+    <div class="dash-header">
+        <div>
+            <h1 class="dash-h1">Cancel Leave</h1>
+            <p class="dash-eyebrow">Cancel pending leave requests</p>
+        </div>
+        <div class="dash-actions">
+            <a href="{{ url_for('employee.dashboard') }}" class="btn btn-soft">
+                <i class="bi bi-arrow-left me-2"></i>Back to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <div class="card card-soft">
+        <div class="card-body">
+            <p class="text-muted">Leave cancellation interface will be implemented here.</p>
+            <p>This will include:</p>
+            <ul>
+                <li>List of pending leave requests</li>
+                <li>Cancel button for each request</li>
+                <li>Cancellation reason</li>
+                <li>Confirmation dialog</li>
+            </ul>
+        </div>
+    </div>
+</main>
+{% endblock %}

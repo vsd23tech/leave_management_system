@@ -7,6 +7,7 @@ from sqlalchemy import text
 from app import db as dbmod
 from app.admin import bp as admin_bp  # register admin endpoints
 from app.config import get_settings
+from app.employee import bp as employee_bp  # register employee endpoints
 from app.logging_utils import configure_logging
 
 
@@ -68,6 +69,7 @@ def create_app():
 
     # Blueprints
     app.register_blueprint(admin_bp)
+    app.register_blueprint(employee_bp)
 
     # Release scoped session at end of request
     @app.teardown_appcontext
