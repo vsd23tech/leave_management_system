@@ -4,49 +4,238 @@
 {% block head_extras %}
 {{ super() }}
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    .profile-btn {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .profile-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+        transition: left 0.5s;
+    }
+
+    .profile-btn:hover {
+        background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.6);
+    }
+
+    .profile-btn:hover::before {
+        left: 100%;
+    }
+
+    .profile-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    }
+
+    .profile-btn i {
+        font-size: 1.2rem;
+        color: white;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    /* Holiday Calendar Enhancements */
+    .holiday-icon {
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: transform 0.2s ease;
+        display: inline-block;
+        filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    .holiday-icon:hover {
+        transform: scale(1.2);
+    }
+
+    .holiday-icon.past-holiday {
+        opacity: 0.6;
+        filter: grayscale(0.3) drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1));
+    }
+
+    .letter-spacing-1 {
+        letter-spacing: 0.5px;
+    }
+
+    .fw-medium {
+        font-weight: 500;
+    }
+
+    /* Enhanced card styling */
+    .card-soft {
+        transition: all 0.3s ease;
+    }
+
+    .card-soft:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    /* Team Availability Enhancements */
+    .leave-type-badge {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        font-weight: 700;
+        color: white;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .leave-type-badge:hover {
+        transform: scale(1.1);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .leave-sick {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        border: 2px solid #fbbf24;
+    }
+
+    .leave-vacation {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        border: 2px solid #34d399;
+    }
+
+    .leave-personal {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        border: 2px solid #60a5fa;
+    }
+
+    .leave-training {
+        background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
+        border: 2px solid #a78bfa;
+    }
+
+    /* Progress bar enhancements */
+    .progress {
+        background-color: #f3f4f6;
+        border: 1px solid #e5e7eb;
+    }
+
+    .progress-bar {
+        background: linear-gradient(90deg, #10b981 0%, #059669 100%);
+        box-shadow: 0 1px 3px rgba(16, 185, 129, 0.3);
+    }
+</style>
 {% endblock %}
 
 {% block content %}
 <main class="dash-wrap" role="main" aria-labelledby="dashboard-title">
     <!-- Header / Quick Actions -->
     <div class="dash-header">
-        <div>
-            <h1 id="dashboard-title" class="dash-h1">My Dashboard</h1>
+        <div class="d-flex align-items-center justify-content-between w-100">
+            <div class="header-left flex-grow-1">
+                <h1 id="dashboard-title" class="dash-h1 mb-0">My Dashboard</h1>
+            </div>
+            <div class="header-right flex-shrink-0">
+                <a href="{{ url_for('employee.profile') }}" class="btn btn-icon profile-btn" data-bs-toggle="tooltip"
+                    data-bs-placement="bottom" title="My Profile">
+                    <i class="bi bi-person-circle"></i>
+                </a>
+            </div>
         </div>
     </div>
 
-    <!-- KPI Cards Row -->
+    <!-- Leave Balance Section -->
     <section class="dash-section" aria-label="Leave overview">
-        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4 g-4">
-            <div class="col">
-                <div class="card card-soft kpi-card" aria-live="polite">
-                    <div class="card-body">
-                        <div class="kpi-value" id="kpi-balance" data-kpi="available_balance">—</div>
-                        <div class="kpi-label">Available Balance (Days)</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card card-soft kpi-card">
-                    <div class="card-body">
-                        <div class="kpi-value" id="kpi-used" data-kpi="used_this_fy">—</div>
-                        <div class="kpi-label">Used This FY (Days)</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card card-soft kpi-card">
-                    <div class="card-body">
-                        <div class="kpi-value" id="kpi-open" data-kpi="open_requests">—</div>
-                        <div class="kpi-label">Open Requests</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col">
-                <div class="card card-soft kpi-card">
-                    <div class="card-body">
-                        <div class="kpi-value" id="kpi-awaiting" data-kpi="awaiting_approval">—</div>
-                        <div class="kpi-label">Awaiting Approval</div>
+        <h3 class="dash-h3">Your Leave Balance</h3>
+        <div class="row">
+            <div class="col-12">
+                <div class="card card-soft h-100">
+                    <div class="card-body d-flex flex-column">
+                        <div class="row g-2">
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Sick Leave</small>
+                                    <small class="fw-bold">8/15</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-primary" style="width: 53%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Earned Leave</small>
+                                    <small class="fw-bold">10/25</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-success" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Casual Leave</small>
+                                    <small class="fw-bold">5/10</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-warning" style="width: 50%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Unpaid Leave</small>
+                                    <small class="fw-bold">20/30</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-info" style="width: 67%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Maternity Leave</small>
+                                    <small class="fw-bold">0/90</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-success" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Paternity Leave</small>
+                                    <small class="fw-bold">0/15</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-info" style="width: 0%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Compensatory Off</small>
+                                    <small class="fw-bold">2/5</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-warning" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <div class="col-6 col-md-3">
+                                <div class="d-flex justify-content-between align-items-center mb-1">
+                                    <small class="text-muted">Bereavement Leave</small>
+                                    <small class="fw-bold">0/7</small>
+                                </div>
+                                <div class="progress" style="height: 3px;">
+                                    <div class="progress-bar bg-danger" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,6 +277,20 @@
             <div class="col-12 col-md-6 col-lg-3">
                 <div class="card card-soft h-100">
                     <div class="card-body text-center d-flex flex-column">
+                        <div class="card-icon-wrapper icon-secondary">
+                            <i class="bi bi-pencil-square"></i>
+                        </div>
+                        <h5 class="card-title">Update Leave</h5>
+                        <p class="card-text text-muted flex-grow-1">Modify existing leave requests</p>
+                        <div class="mt-auto">
+                            <a href="{{ url_for('employee.update_leave') }}" class="btn btn-secondary w-100">Update</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-12 col-md-6 col-lg-3">
+                <div class="card card-soft h-100">
+                    <div class="card-body text-center d-flex flex-column">
                         <div class="card-icon-wrapper icon-info">
                             <i class="bi bi-clock-history"></i>
                         </div>
@@ -100,20 +303,6 @@
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card card-soft h-100">
-                    <div class="card-body text-center d-flex flex-column">
-                        <div class="card-icon-wrapper icon-success">
-                            <i class="bi bi-person-circle"></i>
-                        </div>
-                        <h5 class="card-title">My Profile</h5>
-                        <p class="card-text text-muted flex-grow-1">Update personal information</p>
-                        <div class="mt-auto">
-                            <a href="{{ url_for('employee.profile') }}" class="btn btn-success w-100">View Profile</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
         </div>
     </section>
 
@@ -121,51 +310,7 @@
     <section class="dash-section" aria-label="Information and status">
         <h3 class="dash-h3">Information & Status</h3>
         <div class="row g-4">
-            <div class="col-12 col-md-6 col-lg-3">
-                <div class="card card-soft h-100">
-                    <div class="card-body d-flex flex-column">
-                        <div class="d-flex align-items-center mb-3">
-                            <div class="card-icon-wrapper icon-primary"
-                                style="width: 2.5rem; height: 2.5rem; margin: 0 0.75rem 0 0;">
-                                <i class="bi bi-pie-chart" style="font-size: 1rem;"></i>
-                            </div>
-                            <h6 class="card-title mb-0">Leave Balance</h6>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Sick Leave</small>
-                                <small class="fw-bold">8/15 days</small>
-                            </div>
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-primary" style="width: 53%"></div>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Earned Leave</small>
-                                <small class="fw-bold">10/25 days</small>
-                            </div>
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-success" style="width: 40%"></div>
-                            </div>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Casual Leave</small>
-                                <small class="fw-bold">5/10 days</small>
-                            </div>
-                            <div class="progress" style="height: 4px;">
-                                <div class="progress-bar bg-warning" style="width: 50%"></div>
-                            </div>
-                        </div>
-                        <div class="mt-auto">
-                            <a href="{{ url_for('employee.leave_history') }}" class="btn btn-primary w-100">View
-                                Details</a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card card-soft h-100">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
@@ -173,36 +318,117 @@
                                 style="width: 2.5rem; height: 2.5rem; margin: 0 0.75rem 0 0;">
                                 <i class="bi bi-calendar-event" style="font-size: 1rem;"></i>
                             </div>
-                            <h6 class="card-title mb-0">Holiday Calendar</h6>
+                            <h6 class="card-title mb-0 fw-bold">Holiday Calendar</h6>
                         </div>
                         <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Next Holiday</small>
-                                <small class="fw-bold text-success">Sep 1</small>
+                            <div class="row g-3">
+                                <!-- Left Column -->
+                                <div class="col-6 position-relative">
+                                    <!-- Q2 (Jul-Sep) -->
+                                    <div class="mb-3">
+                                        <small
+                                            class="text-primary fw-bold d-block mb-2 text-uppercase letter-spacing-1">Q2
+                                            (Jul-Sep)</small>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Jul 4</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Independence Day">🎆</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Sep 1</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Labor Day">🏭</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Q3 (Oct-Dec) -->
+                                    <div class="mb-3">
+                                        <small
+                                            class="text-primary fw-bold d-block mb-2 text-uppercase letter-spacing-1">Q3
+                                            (Oct-Dec)</small>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Oct 13</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Columbus Day">🚢</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Nov 11</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Veterans Day">🎖️</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Nov 27</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Thanksgiving">🦃</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Dec 25</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Christmas">🎄</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Vertical separator line -->
+                                    <div class="position-absolute top-0 bottom-0 end-0"
+                                        style="width: 1px; background: repeating-linear-gradient(to bottom, #e1e5e9 0, #e1e5e9 2px, transparent 2px, transparent 4px); right: -0.5rem;">
+                                    </div>
+                                </div>
+
+                                <!-- Right Column -->
+                                <div class="col-6">
+                                    <!-- Q4 (Jan-Mar) -->
+                                    <div class="mb-3">
+                                        <small
+                                            class="text-primary fw-bold d-block mb-2 text-uppercase letter-spacing-1">Q4
+                                            (Jan-Mar)</small>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Jan 1</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="New Year's Day">🎊</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Jan 20</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Martin Luther King Jr. Day">✊</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium">Feb 17</small>
+                                            <span class="holiday-icon" data-bs-toggle="tooltip" data-bs-placement="top"
+                                                title="Presidents' Day">🏛️</span>
+                                        </div>
+                                    </div>
+
+                                    <!-- Q1 (Apr-Jun) - Past holidays with strikethrough -->
+                                    <div class="mb-3">
+                                        <small
+                                            class="text-muted fw-bold d-block mb-2 text-uppercase letter-spacing-1">Q1
+                                            (Apr-Jun)</small>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium"
+                                                style="text-decoration: line-through;">Apr 15</small>
+                                            <span class="holiday-icon past-holiday" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Tax Day">📊</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium"
+                                                style="text-decoration: line-through;">May 27</small>
+                                            <span class="holiday-icon past-holiday" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Memorial Day">🌺</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center mb-2">
+                                            <small class="text-muted fw-medium"
+                                                style="text-decoration: line-through;">Jun 19</small>
+                                            <span class="holiday-icon past-holiday" data-bs-toggle="tooltip"
+                                                data-bs-placement="top" title="Juneteenth">✊🏾</span>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <small class="text-muted">Labor Day</small>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Following</small>
-                                <small class="fw-bold text-info">Oct 13</small>
-                            </div>
-                            <small class="text-muted">Columbus Day</small>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Then</small>
-                                <small class="fw-bold text-warning">Nov 11</small>
-                            </div>
-                            <small class="text-muted">Veterans Day</small>
-                        </div>
-                        <div class="mt-auto">
-                            <button class="btn btn-warning w-100">View Calendar</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card card-soft h-100">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
@@ -210,37 +436,66 @@
                                 style="width: 2.5rem; height: 2.5rem; margin: 0 0.75rem 0 0;">
                                 <i class="bi bi-people" style="font-size: 1rem;"></i>
                             </div>
-                            <h6 class="card-title mb-0">Team Availability</h6>
+                            <h6 class="card-title mb-0 fw-bold">Team Availability</h6>
                         </div>
                         <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Currently Out</small>
-                                <span class="badge bg-warning">2 people</span>
+                            <div class="row g-3">
+                                <!-- Left Column - Current Week -->
+                                <div class="col-6 position-relative">
+                                    <small
+                                        class="text-warning fw-bold d-block mb-2 text-uppercase letter-spacing-1">This
+                                        Week</small>
+                                    <small class="text-muted fw-medium d-block mb-2">Currently Out</small>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="text-muted fw-medium">John D.</small>
+                                        <span class="leave-type-badge leave-sick" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Sick Leave">SL</span>
+                                    </div>
+                                    <small class="text-muted d-block mb-2 fw-medium">Returns: <span
+                                            class="fw-bold text-success">Aug 23</span></small>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="text-muted fw-medium">Sarah W.</small>
+                                        <span class="leave-type-badge leave-vacation" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Vacation">V</span>
+                                    </div>
+                                    <small class="text-muted d-block mb-2 fw-medium">Returns: <span
+                                            class="fw-bold text-success">Aug 25</span></small>
+
+                                    <!-- Vertical separator line -->
+                                    <div class="position-absolute top-0 bottom-0 end-0"
+                                        style="width: 1px; background: repeating-linear-gradient(to bottom, #e1e5e9 0, #e1e5e9 2px, transparent 2px, transparent 4px); right: -0.5rem;">
+                                    </div>
+                                </div>
+
+                                <!-- Right Column - Next Week -->
+                                <div class="col-6">
+                                    <small class="text-info fw-bold d-block mb-2 text-uppercase letter-spacing-1">Next
+                                        Week</small>
+                                    <small class="text-muted fw-medium d-block mb-2">Planned Leaves</small>
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="text-muted fw-medium">Mike J.</small>
+                                        <span class="leave-type-badge leave-personal" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Personal Leave">P</span>
+                                    </div>
+                                    <small class="text-muted d-block mb-2 fw-medium">Aug 26 - Aug 27</small>
+
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <small class="text-muted fw-medium">Lisa R.</small>
+                                        <span class="leave-type-badge leave-training" data-bs-toggle="tooltip"
+                                            data-bs-placement="top" title="Training">T</span>
+                                    </div>
+                                    <small class="text-muted d-block mb-2 fw-medium">Aug 28 - Aug 29</small>
+                                </div>
                             </div>
-                            <small class="text-muted">John D. (Sick Leave)</small><br>
-                            <small class="text-muted">Sarah W. (Vacation)</small>
                         </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">This Week</small>
-                                <span class="badge bg-info">1 person</span>
-                            </div>
-                            <small class="text-muted">Mike J. (Friday)</small>
-                        </div>
-                        <div class="flex-grow-1">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small class="text-muted">Next Week</small>
-                                <span class="badge bg-success">0 people</span>
-                            </div>
-                            <small class="text-muted">Full team available</small>
-                        </div>
-                        <div class="mt-auto">
-                            <button class="btn btn-info w-100">View Team</button>
+                        <div class="mt-auto pt-2">
+                            <button class="btn btn-info w-100">View Team Schedule</button>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="col-12 col-md-6 col-lg-3">
+            <div class="col-12 col-md-6 col-lg-4">
                 <div class="card card-soft h-100">
                     <div class="card-body d-flex flex-column">
                         <div class="d-flex align-items-center mb-3">
@@ -251,13 +506,13 @@
                             <h6 class="card-title mb-0">Quick Actions</h6>
                         </div>
                         <div class="flex-grow-1">
-                            <button class="btn btn-outline-primary btn-sm w-100 mb-2">
+                            <button class="btn btn-outline-primary btn-sm w-100 mb-1">
                                 <i class="bi bi-clock me-1"></i>Request Half Day
                             </button>
-                            <button class="btn btn-outline-secondary btn-sm w-100 mb-2">
+                            <button class="btn btn-outline-secondary btn-sm w-100 mb-1">
                                 <i class="bi bi-file-text me-1"></i>Check Policy
                             </button>
-                            <button class="btn btn-outline-success btn-sm w-100 mb-2">
+                            <button class="btn btn-outline-success btn-sm w-100 mb-1">
                                 <i class="bi bi-envelope me-1"></i>Contact HR
                             </button>
                             <button class="btn btn-outline-info btn-sm w-100">

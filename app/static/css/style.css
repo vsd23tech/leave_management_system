@@ -26,14 +26,17 @@
   --bg-elev-1: #ffffff;
   --bg-elev-2: #f1f3f4;
   --bg-elev-3: #e8eaed;
+  --bg-elevated: #ffffff;
 
   --text-body: #1e293b;
   --text-muted: #64748b;
   --text-inverse: #ffffff;
+  --text-primary: #1e293b;
 
   /* Borders & Lines */
   --line-color: #e2e8f0;
   --line-strong: #cbd5e1;
+  --border-color: #e2e8f0;
 
   /* Effects */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
@@ -78,6 +81,38 @@
   --icon-bg-warning: linear-gradient(135deg, #f59e0b, #d97706);
   --icon-bg-info: linear-gradient(135deg, #3b82f6, #2563eb);
   --icon-bg-danger: linear-gradient(135deg, #ef4444, #dc2626);
+  --icon-bg-secondary: linear-gradient(135deg, #6b7280, #4b5563);
+
+  /* Status Colors for Leave Management */
+  --success: #10b981;
+  --success-light: #d1fae5;
+  --success-lighter: #ecfdf5;
+  --success-dark: #047857;
+  --success-border: #a7f3d0;
+
+  --warning: #f59e0b;
+  --warning-light: #fef3c7;
+  --warning-lighter: #fffbeb;
+  --warning-dark: #d97706;
+  --warning-border: #fde68a;
+
+  --danger: #ef4444;
+  --danger-light: #fee2e2;
+  --danger-lighter: #fef2f2;
+  --danger-dark: #dc2626;
+  --danger-border: #fecaca;
+
+  --info: #3b82f6;
+  --info-light: #dbeafe;
+  --info-lighter: #eff6ff;
+  --info-dark: #1d4ed8;
+  --info-border: #93c5fd;
+
+  --secondary: #6b7280;
+  --secondary-light: #f3f4f6;
+  --secondary-lighter: #f9fafb;
+  --secondary-dark: #374151;
+  --secondary-border: #d1d5db;
 
   /* Spacing rhythm */
   --space-1: .25rem;
@@ -1394,6 +1429,11 @@ button:focus-visible,
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 }
 
+.card-icon-wrapper.icon-secondary {
+  background: var(--icon-bg-secondary);
+  box-shadow: 0 4px 12px rgba(107, 114, 128, 0.3);
+}
+
 /* Enhanced button styling */
 .btn-primary {
   background: var(--icon-bg-primary);
@@ -1601,7 +1641,8 @@ button:focus-visible,
 .dash-header .header-left,
 .dash-header .header-right {
   flex: 0 0 auto;
-  width: 60px; /* Fixed width for balance */
+  width: 60px;
+  /* Fixed width for balance */
 }
 
 .dash-header .header-center {
@@ -2134,9 +2175,17 @@ textarea.form-control {
   color: white;
 }
 
-.file-icon.pdf { background: var(--icon-bg-danger); }
-.file-icon.doc { background: var(--icon-bg-primary); }
-.file-icon.img { background: var(--icon-bg-success); }
+.file-icon.pdf {
+  background: var(--icon-bg-danger);
+}
+
+.file-icon.doc {
+  background: var(--icon-bg-primary);
+}
+
+.file-icon.img {
+  background: var(--icon-bg-success);
+}
 
 .file-details {
   flex: 1;

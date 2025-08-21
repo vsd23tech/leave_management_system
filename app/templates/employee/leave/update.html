@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Cancel Leave{% endblock %}
+{% block title %}Update Leave{% endblock %}
 
 {% block head_extras %}
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -219,54 +219,32 @@
         margin-bottom: 0.5rem;
     }
 
-    .cancel-btn {
+    .update-btn {
         width: 100%;
         margin-top: 0.75rem;
     }
 
-    .leave-card.partially-cancelled {
-        border-left: 4px solid var(--warning);
-        background: linear-gradient(135deg, var(--warning-light) 0%, var(--warning-lighter) 100%);
+    .leave-card.not-editable {
+        opacity: 0.6;
+        cursor: not-allowed;
     }
 
-    .leave-card.partially-cancelled::before {
-        content: 'Partially Cancelled';
+    .leave-card.not-editable .update-btn {
+        display: none;
+    }
+
+    .leave-card.not-editable::after {
+        content: 'Cannot be modified';
         position: absolute;
         top: 10px;
         right: 10px;
-        background: var(--warning);
+        background: var(--text-muted);
         color: white;
         padding: 2px 8px;
         border-radius: 12px;
         font-size: 0.7rem;
         font-weight: 600;
         z-index: 1;
-    }
-
-    .date-selection-card {
-        transition: all 0.2s ease;
-        cursor: pointer;
-    }
-
-    .date-selection-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    }
-
-    .date-selection-card.selected {
-        background: var(--brand-primary) !important;
-        color: white !important;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-    }
-
-    .leave-card .text-warning {
-        color: var(--warning-dark) !important;
-        font-weight: 500;
-    }
-
-    .leave-card .text-warning i {
-        color: var(--warning);
     }
 
     .grace-period-warning {
@@ -325,44 +303,6 @@
         color: var(--text-muted);
         text-transform: uppercase;
         letter-spacing: 0.5px;
-    }
-
-    .header-layout {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        margin-bottom: 2rem;
-        padding: 1.5rem;
-        background: linear-gradient(135deg, var(--bg-elevated) 0%, var(--bg-lighter) 100%);
-        border-radius: var(--border-radius);
-        border: 1px solid var(--border-color);
-        box-shadow: var(--card-shadow);
-    }
-
-    .header-left {
-        flex: 0 0 auto;
-    }
-
-    .header-center {
-        flex: 1;
-        text-align: center;
-    }
-
-    .header-center h1 {
-        color: var(--text-primary);
-        font-weight: 700;
-        margin-bottom: 0.25rem;
-        font-size: 1.75rem;
-    }
-
-    .header-center p {
-        color: var(--text-muted);
-        font-size: 1rem;
-        margin-bottom: 0;
-    }
-
-    .header-right {
-        flex: 0 0 auto;
     }
 
     .btn.btn-icon {
@@ -444,8 +384,8 @@
                     </a>
                 </div>
                 <div class="header-center text-center">
-                    <h1 class="dash-h1">Cancel Leave</h1>
-                    <p class="dash-eyebrow">Manage your leave requests</p>
+                    <h1 class="dash-h1">Update Leave</h1>
+                    <p class="dash-eyebrow">Modify your leave requests</p>
                 </div>
                 <div class="header-right">
                     <!-- Empty space for balance -->
@@ -456,9 +396,9 @@
         <!-- Grace Period Warning -->
         <div class="grace-period-warning" id="gracePeriodWarning" style="display: none;">
             <i class="fas fa-clock me-2"></i>
-            <strong>Today's Leave Cancellation:</strong> You can cancel today's leave until <span
+            <strong>Today's Leave Modification:</strong> You can modify today's leave until <span
                 class="time-remaining">9:00 AM</span>.
-            After that, only future leave dates can be cancelled.
+            After that, only future leave dates can be modified.
         </div>
 
         <!-- Leave Balance Preview -->
@@ -514,91 +454,63 @@
         </div>
     </div>
 
-    <!-- Cancellation Type Modal -->
-    <div class="modal fade" id="cancellationTypeModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+    <!-- Update Leave Modal -->
+    <div class="modal fade" id="updateLeaveModal" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Cancellation Type</h5>
+                <div class="modal-header py-3">
+                    <h6 class="modal-title mb-0">Update Leave Request</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <p class="mb-3">How would you like to cancel this leave?</p>
-                    <div class="row g-3">
-                        <div class="col-6">
-                            <div class="card h-100 cursor-pointer" id="fullCancellation">
-                                <div class="card-body text-center p-3">
-                                    <i class="fas fa-times-circle text-danger mb-2" style="font-size: 2rem;"></i>
-                                    <h6 class="card-title">Cancel Entire Leave</h6>
-                                    <p class="card-text small text-muted">Cancel all days in this leave period</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-6">
-                            <div class="card h-100 cursor-pointer" id="partialCancellation">
-                                <div class="card-body text-center p-3">
-                                    <i class="fas fa-calendar-minus text-warning mb-2" style="font-size: 2rem;"></i>
-                                    <h6 class="card-title">Partial Cancellation</h6>
-                                    <p class="card-text small text-muted">Select specific dates to cancel</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Partial Cancellation Modal -->
-    <div class="modal fade" id="partialCancellationModal" tabindex="-1">
-        <div class="modal-dialog modal-lg modal-dialog-centered">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Partial Cancellation</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="alert alert-info">
+                <div class="modal-body py-3">
+                    <div class="alert alert-info py-2 mb-3">
                         <i class="fas fa-info-circle me-2"></i>
-                        <strong>Leave Period:</strong> <span id="partialLeavePeriod"></span>
-                        <br>
-                        <strong>Current Time:</strong> <span id="currentTime"></span>
+                        <small><strong>Note:</strong> Any changes will require re-approval.</small>
                     </div>
 
-                    <div class="mb-3">
-                        <label class="form-label">Select dates to cancel:</label>
-                        <div class="row" id="dateSelectionGrid">
-                            <!-- Date selection cards will be populated here -->
-                        </div>
-                    </div>
-
-                    <div class="alert alert-warning" id="gracePeriodAlert" style="display: none;">
-                        <i class="fas fa-exclamation-triangle me-2"></i>
-                        <strong>Today's leave</strong> can only be cancelled until 9:00 AM.
-                    </div>
-
-                    <div class="card bg-light border-info" id="partialCancellationSummary" style="display: none;">
-                        <div class="card-body">
-                            <h6 class="text-info">
-                                <i class="fas fa-info-circle me-2"></i>Partial Cancellation Summary
-                            </h6>
-                            <div class="row">
-                                <div class="col-6">
-                                    <strong>Dates to Cancel:</strong><br>
-                                    <span id="datesToCancel" class="text-danger"></span>
-                                </div>
-                                <div class="col-6">
-                                    <strong>Remaining Leave:</strong><br>
-                                    <span id="remainingLeave" class="text-success"></span>
-                                </div>
+                    <form id="updateLeaveForm">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Leave Type</label>
+                                <select class="form-select form-select-sm" id="leaveTypeSelect" required>
+                                    <option value="">Select Leave Type</option>
+                                    <option value="sick">Sick Leave</option>
+                                    <option value="earned">Earned Leave</option>
+                                    <option value="casual">Casual Leave</option>
+                                    <option value="unpaid">Unpaid Leave</option>
+                                    <option value="maternity">Maternity Leave</option>
+                                    <option value="paternity">Paternity Leave</option>
+                                    <option value="compensatory">Compensatory Off</option>
+                                    <option value="bereavement">Bereavement Leave</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Duration (Days)</label>
+                                <input type="number" class="form-control form-select-sm" id="leaveDuration" min="1"
+                                    max="365" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">Start Date</label>
+                                <input type="text" class="form-control form-select-sm" id="startDate"
+                                    placeholder="Select start date" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label small mb-1">End Date</label>
+                                <input type="text" class="form-control form-select-sm" id="endDate"
+                                    placeholder="Select end date" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label small mb-1">Reason for Leave</label>
+                                <textarea class="form-control form-select-sm" id="leaveReason" rows="3"
+                                    placeholder="Please provide a reason for the leave modification"
+                                    required></textarea>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Go Back</button>
-                    <button type="button" class="btn btn-primary" id="confirmPartialCancellation">Confirm
-                        Cancellation</button>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="confirmUpdate">Update Leave</button>
                 </div>
             </div>
         </div>
@@ -606,25 +518,39 @@
 
     <!-- Confirmation Modal -->
     <div class="modal fade" id="confirmationModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Confirm Cancellation</h5>
+                <div class="modal-header py-3">
+                    <h6 class="modal-title mb-0">Confirm Leave Update</h6>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <p>Are you sure you want to cancel this leave?</p>
-                    <div class="card bg-light">
-                        <div class="card-body">
-                            <div id="confirmationDetails">
-                                <!-- Leave details will be populated here -->
+                <div class="modal-body py-3">
+                    <p class="mb-3">Are you sure you want to update this leave request?</p>
+
+                    <!-- Compact layout for confirmation details -->
+                    <div class="row g-3">
+                        <div class="col-md-8">
+                            <div class="card bg-light border-0">
+                                <div class="card-body p-3">
+                                    <h6 class="card-title mb-2">Update Summary</h6>
+                                    <div id="updateConfirmationDetails">
+                                        <!-- Update details will be populated here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="alert alert-warning py-2 mb-0" id="approvalWarning" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-2"></i>
+                                <small><strong>Important:</strong> This will reset the approval status and require
+                                    re-approval.</small>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Go Back</button>
-                    <button type="button" class="btn btn-danger" id="confirmCancellation">Confirm Cancellation</button>
+                <div class="modal-footer py-2">
+                    <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">Go Back</button>
+                    <button type="button" class="btn btn-primary btn-sm" id="confirmUpdateLeave">Confirm Update</button>
                 </div>
             </div>
         </div>
@@ -632,34 +558,48 @@
 
     <!-- Success Modal -->
     <div class="modal fade" id="successModal" tabindex="-1">
-        <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title text-success">
-                        <i class="fas fa-check-circle me-2"></i>Leave Cancelled Successfully
+                <div class="modal-header py-3">
+                    <h5 class="modal-title text-success mb-0">
+                        <i class="fas fa-check-circle me-2"></i>Leave Updated Successfully
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
-                <div class="modal-body">
-                    <p>Your leave has been cancelled successfully.</p>
-                    <div class="card bg-success-light border-success">
-                        <div class="card-body">
-                            <h6>Updated Leave Balance:</h6>
-                            <div id="updatedBalanceDetails">
-                                <!-- Updated balance will be shown here -->
+                <div class="modal-body py-3">
+                    <p class="mb-3">Your leave request has been updated successfully.</p>
+
+                    <!-- Compact layout for leave details and balances -->
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <div class="card bg-success-light border-success h-100">
+                                <div class="card-body p-3">
+                                    <h6 class="card-title text-success mb-2">Updated Leave Details</h6>
+                                    <div id="updatedLeaveDetails">
+                                        <!-- Updated leave details will be shown here -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card bg-info-light border-info h-100">
+                                <div class="card-body p-3">
+                                    <h6 class="card-title text-info mb-2">Updated Leave Balances</h6>
+                                    <div id="updatedLeaveBalances">
+                                        <!-- Balance details will be populated by JavaScript -->
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="alert alert-info small mt-3">
+
+                    <div class="alert alert-info small mt-3 mb-0">
                         <i class="fas fa-info-circle me-1"></i>
-                        <strong>Calculation:</strong> Previous Balance + Cancelled Days = New Balance
-                    </div>
-                    <div class="mt-3">
-                        <i class="fas fa-envelope me-2"></i>
-                        <small class="text-muted">Notification has been sent to your manager</small>
+                        <strong>Next Steps:</strong> Your updated leave request will be sent to your manager for
+                        approval.
                     </div>
                 </div>
-                <div class="modal-footer">
+                <div class="modal-footer py-2">
                     <button type="button" class="btn btn-success" data-bs-dismiss="modal">Done</button>
                 </div>
             </div>
@@ -669,5 +609,5 @@
 {% endblock %}
 
 {% block body_extras %}
-<script src="{{ url_for('static', filename='js/cancel-leave.js') }}"></script>
+<script src="{{ url_for('static', filename='js/update-leave.js') }}"></script>
 {% endblock %}

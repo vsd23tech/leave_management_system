@@ -15,6 +15,12 @@ def cancel_leave():
     return render_template("employee/leave/cancel.html")
 
 
+@bp.route("/leave/update")
+def update_leave():
+    """Update leave request"""
+    return render_template("employee/leave/update.html")
+
+
 @bp.route("/leave/history")
 def leave_history():
     """Leave history and balance"""
