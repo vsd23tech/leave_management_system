@@ -8,9 +8,9 @@ packages = [{ include = "app" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-flask = "^3.0"
+flask = "^3.1"
 sqlalchemy = "^2.0"
-alembic = "^1.13"
+alembic = "^1.16"
 psycopg2-binary = "^2.9"
 python-dotenv = "^1.0"
 pyyaml = "^6.0"
@@ -18,11 +18,11 @@ gunicorn = "^23.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "^24.0"
-ruff = "^0.5.0"
+ruff = "^0.12.12"
 isort = "^5.13.2"
 bandit = "^1.7.9"
-semgrep = "^1.78.0"
-pytest = "^8.2.0"
+semgrep = "^1.135.0"
+pytest = "^8.4.2"
 pytest-cov = "^4.1.0"
 pre-commit = "^3.7.0"
 yamllint = "^1.35.1"
